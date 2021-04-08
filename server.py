@@ -6,8 +6,8 @@ app = flask.Flask(__name__)
 def homepage():
     return flask.render_template("home.html")
     
-@app.route('/<user_type>/<page_type>')
-def page(user_type, page_type):
+@app.route('/<page_type>')
+def page(page_type):
     return flask.render_template(page_type)
     
 if __name__ == '__main__':
