@@ -1,24 +1,23 @@
 from my_package import *
-# from my_package import maketables,disp,relate
-# from my_package import create_db_connection,create_database,execute_query
-
 
 username = 'admin'
 password = 'password'    
 conn = create_db_connection("localhost", username, password)
+
+def execute_query(query):
+    Connector.execute_query(conn, query)
+    
+def disp(query):
+    return Connector.disp(conn, query)
     
 def init():    
-    check = disp(conn, "SHOW DATABASES LIKE 'hospital'")
+    check = disp("SHOW DATABASES LIKE 'hospital'")
     if len(check) == 0:    
         create_database(conn, "hospital")
-        execute_query(conn, "use hospital")
+        execute_query("use hospital")
         maketables(conn)
         relate(conn)
         print("Hospital database created")
     else: 
         print("Connection to hospital established")
-
-    # execute_query(conn,'use hospital')
-    # data = disp(conn, "show tables")
-    # for a in data:
-    #     print(a,end = ' ')
+        execute_query("use hospital")
