@@ -24,6 +24,33 @@ def register_patient():
         p_history = "NULL"
         execute_query("insert into patient values(" + str(pid) + ", '" + password + "', '" + p_name + "', '" + blood_grp + "', " + str(age) + ", '" + gender + "', '" + ph_no + "', '" + address + "', " + str(aadhar_id) + ", '" + p_history + "')")
         return render_template("patient_login.html")
+
+@app.route('/doctor_login', methods=['POST'])
+def login_doctor():
+    form = request.form
+    if request.method == 'POST':
+        doctor = disp("select * from doctor where doc_id=" + form['userid'] + " AND password='" + form['password'] + "';")
+        if(len(doctor)):
+            return render_template("doctor_home.html")
+        return "Wrong password or username"
+        
+@app.route('/admin_login', methods=['POST'])
+def login_admin():
+    form = request.form
+    if request.method == 'POST':
+        admin = ['admin ka kahan stored hai?']
+        if(len(admin)):
+            return render_template("admin_home.html")
+        return "Wrong password or username"
+        
+@app.route('/patient_login', methods=['POST'])
+def login_patient():
+    form = request.form
+    if request.method == 'POST':
+        patient = disp("select * from patient where p_id=" + form['userid'] + " AND password='" + form['password'] + "';")
+        if(len(patient)):
+            return render_template("patient_home.html")
+        return "Wrong password or username"
     
 @app.route('/<page_type>', methods=['GET'])
 def page(page_type):
