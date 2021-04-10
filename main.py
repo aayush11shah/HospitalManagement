@@ -19,4 +19,4 @@ def page(page_type):
     return render_template(page_type)
     
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

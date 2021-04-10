@@ -1,0 +1,12 @@
+
+''' A function to create and return a connection with localhost '''
+create_db_connection(host_name, user_name, user_password, db_name = None):
+''' A funtion to create a database of a given name via a connection '''
+create_database(connection, name):
+''' A functioon to exectute a query in a connection '''
+execute_query(connection, query):
+''' A function to make all the tables for the database '''
+maketables(connection):
+''' A debugging function to display output '''
+disp(connection, query):
+          
