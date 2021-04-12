@@ -38,36 +38,58 @@
                             <div class="text-center">
                                 <h1 class="h3 text-gray-900 mb-4">Patient Register</h1>
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                                <h1 class="h4 text-gray-900 mb-4">Your user id: {{value}}</h1>
                             </div>
-                            <form action="/patient_register" method="post" class="user">
+
+                            <form action="/patient_register" method="post" class="user" onsubmit="return  ValidationEventOfRegisterForm()">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input name="fname" type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            placeholder="First Name">
+                                        <input name="fname" type="text" class="form-control form-control-user" id="fname" aria-labelledby="exampleFirstName" placeholder="First Name">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input name="lname" type="text" class="form-control form-control-user" id="exampleLastName"
-                                            placeholder="Last Name">
+                                        <input name="lname" type="text" class="form-control form-control-user" id="lname" aria-labelledby="exampleLastName" placeholder="Last Name">
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <input name="email" type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                        placeholder="Email Address">
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input name="blood_grp" type="text" class="form-control form-control-user" id="blood_grp" aria-labelledby="exampleInputPassword" placeholder="Blood Group">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input name="age" type="number" class="form-control form-control-user" id="age" aria-labelledby="exampleRepeatPassword" placeholder="Age">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input name="gender" type="text" class="form-control form-control-user" id="gender" aria-labelledby="exampleInputPassword" placeholder="Gender">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input name ="ph_no" type="text" class="form-control form-control-user" id="ph_no" aria-labelledby="exampleRepeatPassword" placeholder="Phone Number">
+                                    </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input name="pass" type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Password">
+                                        <input name="address" type="text" class="form-control form-control-user" id="address" aria-labelledby="exampleInputPassword" placeholder="Address">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Repeat Password">
+                                        <input name="adhar_id" type="text" class="form-control form-control-user" id="adhar_id" aria-labelledby="exampleRepeatPassword" placeholder="AadhAr ID">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input name="pass" type="password" class="form-control form-control-user" id="pass" aria-labelledby="exampleInputPassword" placeholder="Password">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="password" class="form-control form-control-user" id="password" aria-labelledby="exampleRepeatPassword" placeholder="Repeat Password">
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-user btn-block">
                                     Register Account
                                 </button>
                             </form>
+
+
                             <hr>
                             <div class="text-center">
                                 <a class="small" href="patient_login.html">Already have an account? Login!</a>
@@ -79,6 +101,7 @@
         </div>
 
     </div>
+    
 
     <!-- Bootstrap core JavaScript-->
     <script src="../static/vendor/jquery/jquery.min.js"></script>
@@ -89,6 +112,48 @@
 
     <!-- Custom scripts for all pages-->
     <script src="../static/js/sb-admin-2.min.js"></script>
+
+    <script>
+        function ValidationEventOfRegisterForm() {
+        // Storing Field Values In Variables
+            var fname = document.getElementById("fname").value;
+
+            var lname = document.getElementById("lname").value;
+
+            var pwd = document.getElementById("pass").value;
+
+            var repPwd = document.getElementById("password").value;
+
+            var bloodgrp = document.getElementById("blood_grp").value;
+
+            var age = document.getElementById("age").value;
+
+            var gender = document.getElementById("gender").value;
+
+            var phone = document.getElementById("ph_no").value;
+
+            var address = document.getElementById("address").value;
+
+            var adhar_id = document.getElementById("adhar_id").value;
+            
+
+        // Conditions
+            if (fname != '' && lname != '' &&  pwd != '' && repPwd != '' && bloodgrp!='' && age!='' && gender!='' && phone!='' && address!='' && adhar_id!=''  ) {
+                if(pwd == repPwd){
+                    alert("Please take note of your USER ID and PASSWORD before pressing OK.");
+                    return true;
+                }
+                else {
+                    alert("Please repeat correct password");
+                    return false;
+                } 
+            } 
+            else {
+                alert("All fields are required.....!");
+                return false;
+            }
+        }
+    </script>
 
 </body>
 

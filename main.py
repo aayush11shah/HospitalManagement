@@ -15,12 +15,12 @@ def register_patient():
         pid = disp("select count(*) from patient")[0][0]
         password = form['pass']
         p_name = form['fname'] + " " + form['lname']
-        blood_grp = "bl"
-        age = 40
-        gender = "M"
-        ph_no = "1234567890"
-        address = "ge"
-        aadhar_id = 1234
+        blood_grp = form['blood_grp']
+        age = form['age']
+        gender = form['gender']
+        ph_no = form['ph_no']
+        address = form['address']
+        aadhar_id = form['adhar_id']
         p_history = "NULL"
         execute_query("insert into patient values(" + str(pid) + ", '" + password + "', '" + p_name + "', '" + blood_grp + "', " + str(age) + ", '" + gender + "', '" + ph_no + "', '" + address + "', " + str(aadhar_id) + ", '" + p_history + "')")
         return render_template("patient_login.html")
@@ -38,7 +38,8 @@ def login_doctor():
 def login_admin():
     form = request.form
     if request.method == 'POST':
-        admin = ['admin ka kahan stored hai?']
+        admin = form['userid']
+        passworda = form['passwd']
         if(len(admin)):
             return render_template("admin_home.html")
         return "Wrong password or username"
@@ -54,7 +55,12 @@ def login_patient():
     
 @app.route('/<page_type>', methods=['GET'])
 def page(page_type):
-    return render_template(page_type)
+    if(page_type == "patient_register.html"):
+        userid = str(disp("select count(*) from patient")[0][0])
+        return render_template(page_type,value=userid)
+    else:
+        return render_template(page_type)
+
     
 if __name__ == '__main__':
     init()
