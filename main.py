@@ -15,7 +15,7 @@ def register_patient():
     if request.method == 'POST':
         pid = disp("select count(*) from patient")[0][0]
         password = form['pass']
-        p_name = form['fname'] + form['lname']
+        p_name = form['fname'] + " " + form['lname']
         blood_grp = form['blood_grp']
         age = form['age']
         gender = form['gender']
