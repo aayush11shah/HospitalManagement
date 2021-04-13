@@ -56,6 +56,11 @@ def login_patient():
             return render_template("patient_home.html", p_name=str(patient[0][2]))
         return "Wrong password or username"
 
+@app.route('/admin_manage_doctors.html', methods=['POST'])
+def manage_doctor():
+    if request.action == "delete":
+        execute_query("delete from doctor where doc_id = " + request.docid)
+
 @app.route('/<page_type>', methods=['GET'])
 def page(page_type):
     if(page_type == "patient_register.html"):
