@@ -58,8 +58,10 @@ def login_patient():
 
 @app.route('/admin_manage_doctors.html', methods=['POST'])
 def manage_doctor():
-    if request.action == "delete":
-        execute_query("delete from doctor where doc_id = " + request.docid)
+    form = request.form
+    if form["action"] == "delete":
+        execute_query("delete from doctor where doc_id = " +form["docid"])
+    return render_template("admin_manage_doctors.html", doctor_table=disp("select doc_id, first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor"))
 
 @app.route('/<page_type>', methods=['GET'])
 def page(page_type):

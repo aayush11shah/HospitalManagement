@@ -295,7 +295,8 @@
 							$(buttons[j]).on('click', (e)=>{
 								$(rows[i]).remove();
                                 var url = "/admin_manage_doctors.html";
-                                var params = "action=delete&docid="+$(userid[0]).text();
+                                var params = "action=delete&docid="+$(userid[0]).text().trim();
+                                console.log(params);
                                 var xhr = new XMLHttpRequest();
                                 xhr.open("POST", url, true);
 
