@@ -62,38 +62,43 @@ def page(page_type):
     if(page_type == "patient_register.html"):
         userid = str(disp("select count(*) from patient")[0][0])
         return render_template(page_type, value=userid)
-    elif(login[request.remote_addr] == 'a'):
-        if(page_type == 'admin_manage_doctor.html'):
-            return render_template(page_type, doctor_table=json.jsonify(disp("select doc_id, first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor")))
-        elif(page_type == 'admin_manage_patient.html'):
-            return render_template(page_type, patient=json.jsonify(disp("select p_id, p_name, blood_grp, age, gender, ph_no, address, aadhar_id, p_history from patient")))
-        elif(page_type == 'admin_manage_pharmacy.html'):
-            return render_template(page_type, pharmacy=json.jsonify(disp("select item_id, item_name, qty, price from expense")))
-    elif(login[request.remote_addr][0] == 'p'):
-        m_status = login[request.remote_addr]
-        p_name = str(disp("select p_name from patient where p_id = " + m_status[1:]))
-        if(page_type == 'patient_book_appointment.html'):
-            return render_template(page_type, p_name=p_name)
-        elif(page_type == 'patient_book_room.html'):
-            return render_template(page_type, p_name=p_name)
-        elif(page_type == 'patient_home.html'):
-            return render_template(page_type, p_name=p_name)
-        elif(page_type == 'patient_shop.html'):
-            return render_template(page_type, p_name=p_name)
-        elif(page_type == 'patient_transaction_history.html'):
-            return render_template(page_type, p_name=p_name)
-    elif(login[request.remote_addr][0] == 'd'):
-        m_status = login[request.remote_addr]
-        d_name = str(disp("select first_name, last_name from patient where p_id = " + m_status[1:]))
-        d_name = d_name[0] + " " + d_name[1]
-        if(page_type == 'doctor_appointments.html'):
-            return render_template(page_type, d_name=d_name)
-        elif(page_type == 'doctor_home.html'):
-            return render_template(page_type, d_name=d_name)
+    if(request.remote_addr in login.keys()):
+        if(login[request.remote_addr] == 'a'):
+            if(page_type == 'admin_manage_doctor.html'):
+                return render_template(page_type, doctor_table=json.jsonify(disp("select doc_id, first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor")))
+            elif(page_type == 'admin_manage_patient.html'):
+                return render_template(page_type, patient=json.jsonify(disp("select p_id, p_name, blood_grp, age, gender, ph_no, address, aadhar_id, p_history from patient")))
+            elif(page_type == 'admin_manage_pharmacy.html'):
+                return render_template(page_type, pharmacy=json.jsonify(disp("select item_id, item_name, qty, price from expense")))
+            return render_template(page_type)   
+        elif(login[request.remote_addr][0] == 'p'):
+            m_status = login[request.remote_addr]
+            p_name = str(disp("select p_name from patient where p_id = " + m_status[1:])[0][0])
+            if(page_type == 'patient_book_appointment.html'):
+                return render_template(page_type, p_name=p_name)
+            elif(page_type == 'patient_book_room.html'):
+                return render_template(page_type, p_name=p_name)
+            elif(page_type == 'patient_home.html'):
+                return render_template(page_type, p_name=p_name)
+            elif(page_type == 'patient_shop.html'):
+                return render_template(page_type, p_name=p_name)
+            elif(page_type == 'patient_transaction_history.html'):
+                return render_template(page_type, p_name=p_name)
+            return render_template(page_type)
+        elif(login[request.remote_addr][0] == 'd'):
+            m_status = login[request.remote_addr]
+            d_name = str(disp("select first_name, last_name from patient where p_id = " + m_status[1:])[0])
+            d_name = d_name[0] + " " + d_name[1]
+            if(page_type == 'doctor_appointments.html'):
+                return render_template(page_type, d_name=d_name)
+            elif(page_type == 'doctor_home.html'):
+                return render_template(page_type, d_name=d_name)
+            return render_template(page_type)
     else:
+        if(page_type == "home.html"):
+            del login[request.remote_addr]
         return render_template(page_type)
 
-    
 if __name__ == '__main__':
     init()
     app.run(debug=True)
