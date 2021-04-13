@@ -12,7 +12,6 @@ def homepage():
 @app.route('/patient_register', methods=['POST'])
 def register_patient():
     form = request.form
-    print("reg")
     if request.method == 'POST':
         pid = disp("select count(*) from patient")[0][0]
         password = form['pass']
@@ -59,7 +58,7 @@ def login_patient():
         return "Wrong password or username"
 
 @app.route('/<page_type>', methods=['GET'])
-def page(page_type, p_name):
+def page(page_type):
     if(page_type == "patient_register.html"):
         userid = str(disp("select count(*) from patient")[0][0])
         return render_template(page_type, value=userid)
