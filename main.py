@@ -8,7 +8,6 @@ login = {}
 def homepage():
     return render_template("home.html")
 
-
 @app.route('/patient_register', methods=['POST'])
 def register_patient():
     form = request.form
