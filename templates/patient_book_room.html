@@ -34,7 +34,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="patient_home.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="patient_home.html?p_name={{p_name}}">
                 <div class="sidebar-brand-icon">
                     <i class="fas fa-hospital-alt"></i>
                 </div>
@@ -132,7 +132,7 @@
                     <div class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Patient</span>
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{p_name}}</span>
                             <img class="img-profile rounded-circle"
                                 src="../static/img/patient2.svg">
                         </a>
