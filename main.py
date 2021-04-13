@@ -44,6 +44,7 @@ def login_admin():
         admin = form['userid']
         passworda = form['passwd']
         if(len(admin)):
+            login[request.remote_addr] = 'a'
             return render_template("admin_home.html")
         return "Wrong password or username"
         
@@ -62,12 +63,13 @@ def page(page_type, p_name):
     if(page_type == "patient_register.html"):
         userid = str(disp("select count(*) from patient")[0][0])
         return render_template(page_type, value=userid)
-    else if(page_type == 'admin_manage_doctor.html'):
-        return render_template(page_type, doctor_table=disp("select * from doctor"))
-    else if(page_type == 'admin_manage_patient.html'):
-        return render_template(page_type, patient=disp("select * from patient"))
-    else if(page_type == 'admin_manage_pharmacy.html'):
-        return render_template(page_type, pharmacy=disp("select * from expense"))
+    else if(login[request.remote_addr] == 'a'):
+        if(page_type == 'admin_manage_doctor.html'):
+            return render_template(page_type, doctor_table=disp("select * from doctor"))
+        else if(page_type == 'admin_manage_patient.html'):
+            return render_template(page_type, patient=disp("select * from patient"))
+        else if(page_type == 'admin_manage_pharmacy.html'):
+            return render_template(page_type, pharmacy=disp("select * from expense"))
     else:
         return render_template(page_type)
 
