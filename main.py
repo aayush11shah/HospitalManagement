@@ -2,6 +2,7 @@ from flask import Flask, request, render_template
 import os
 from database_connection import *
 app = Flask(__name__)
+login = {}
 
 @app.route('/')
 def homepage():
@@ -11,6 +12,7 @@ def homepage():
 @app.route('/patient_register', methods=['POST'])
 def register_patient():
     form = request.form
+    print("reg")
     if request.method == 'POST':
         pid = disp("select count(*) from patient")[0][0]
         password = form['pass']
@@ -31,6 +33,7 @@ def login_doctor():
     if request.method == 'POST':
         doctor = disp("select * from doctor where doc_id=" + form['userid'] + " AND password='" + form['password'] + "';")
         if(len(doctor)):
+            login[request.remote_addr] = 'd' + str(doctor[0][0])
             return render_template("doctor_home.html")
         return "Wrong password or username"
         
@@ -50,14 +53,21 @@ def login_patient():
     if request.method == 'POST':
         patient = disp("select * from patient where p_id=" + form['userid'] + " AND password='" + form['password'] + "';")
         if(len(patient)):
-            return render_template("patient_home.html")
+            login[request.remote_addr] = 'p' + str(patient[0][0])
+            return render_template("patient_home.html", p_name=str(patient[0][2]))
         return "Wrong password or username"
-    
+
 @app.route('/<page_type>', methods=['GET'])
-def page(page_type):
+def page(page_type, p_name):
     if(page_type == "patient_register.html"):
         userid = str(disp("select count(*) from patient")[0][0])
-        return render_template(page_type,value=userid)
+        return render_template(page_type, value=userid)
+    else if(page_type == 'admin_manage_doctor.html'):
+        return render_template(page_type, doctor_table=disp("select * from doctor"))
+    else if(page_type == 'admin_manage_patient.html'):
+        return render_template(page_type, patient=disp("select * from patient"))
+    else if(page_type == 'admin_manage_pharmacy.html'):
+        return render_template(page_type, pharmacy=disp("select * from expense"))
     else:
         return render_template(page_type)
 
