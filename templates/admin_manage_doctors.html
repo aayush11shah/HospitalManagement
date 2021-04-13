@@ -202,7 +202,7 @@
 											{% endfor %}
 											<td>
 												<button>Edit</button>
-												<button>Delete</button>
+												<button method="post" onclic>Delete</button>
 											</td>
                                         </tr>
 										{% endfor %}
@@ -283,15 +283,26 @@
 				var rows = tbody.find('tr');
 				for(let i = 0; i < rows.length; i++) {
 					var buttons = $(rows[i]).find('button');
+                    var userid = $(rows[i]).find('td');
 					for(var j = 0; j < buttons.length; j++) {
 						if($(buttons[j]).text() === 'Edit') {
 							$(buttons[j]).on('click', (e)=>{
 								console.log("I am an edit button of row " + i);
+                                console.log($(userid[0]).text());
 							});
 						}
 						if($(buttons[j]).text() === 'Delete') {
 							$(buttons[j]).on('click', (e)=>{
 								$(rows[i]).remove();
+                                var url = "/admin_manage_doctors.html";
+                                var params = "action=delete&docid="+$(userid[0]).text();
+                                var xhr = new XMLHttpRequest();
+                                xhr.open("POST", url, true);
+
+                                //Send the proper header information along with the request
+                                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                                xhr.send(params);
 							});
 						}
 					}
