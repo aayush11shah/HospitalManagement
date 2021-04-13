@@ -8,7 +8,6 @@ login = {}
 def homepage():
     return render_template("home.html")
 
-
 @app.route('/patient_register', methods=['POST'])
 def register_patient():
     form = request.form
@@ -64,9 +63,10 @@ def page(page_type):
         return render_template(page_type, value=userid)
     if(request.remote_addr in login.keys()):
         if(login[request.remote_addr] == 'a'):
-            if(page_type == 'admin_manage_doctor.html'):
-                return render_template(page_type, doctor_table=json.jsonify(disp("select doc_id, first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor")))
-            elif(page_type == 'admin_manage_patient.html'):
+            if(page_type == 'admin_manage_doctors.html'):
+                print(disp("select doc_id, first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor"))
+                return render_template(page_type, doctor_table=disp("select doc_id, first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor"))
+            elif(page_type == 'admin_manage_patients.html'):
                 return render_template(page_type, patient=json.jsonify(disp("select p_id, p_name, blood_grp, age, gender, ph_no, address, aadhar_id, p_history from patient")))
             elif(page_type == 'admin_manage_pharmacy.html'):
                 return render_template(page_type, pharmacy=json.jsonify(disp("select item_id, item_name, qty, price from expense")))
