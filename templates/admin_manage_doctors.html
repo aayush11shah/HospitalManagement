@@ -180,6 +180,7 @@
                                             <th>Salary</th>
 											<th>dept_id</th>
 											<th>timeslot</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -192,6 +193,7 @@
                                             <th>Salary</th>
 											<th>dept_id</th>
 											<th>timeslot</th>
+                                            <th></th>
                                         </tr>
                                     </tfoot>
                                     <tbody id="table-body">
@@ -200,7 +202,7 @@
                                             {% for element in doctor %}
 											<td> {{element}} </td>
 											{% endfor %}
-											<td>
+											<td align="center">
 												<button class="edit_btn" data-toggle="modal" data-target="#editModal"> Edit </button>
 												<button class="delete_btn">Delete</button>
 											</td>
