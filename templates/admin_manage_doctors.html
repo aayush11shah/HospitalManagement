@@ -176,7 +176,7 @@
                                             <th>first_name</th>
                                             <th>last_name</th>
                                             <th>aadhar_id</th>
-                                            <th>chamber date</th>
+                                            <th>chamber</th>
                                             <th>Salary</th>
 											<th>dept_id</th>
 											<th>timeslot</th>
@@ -188,7 +188,7 @@
                                             <th>first_name</th>
                                             <th>last_name</th>
                                             <th>aadhar_id</th>
-                                            <th>chamber date</th>
+                                            <th>chamber</th>
                                             <th>Salary</th>
 											<th>dept_id</th>
 											<th>timeslot</th>
@@ -201,8 +201,8 @@
 											<td> {{element}} </td>
 											{% endfor %}
 											<td>
-												<button>Edit</button>
-												<button method="post" onclic>Delete</button>
+												<button class="edit_btn" data-toggle="modal" data-target="#editModal"> Edit </button>
+												<button class="delete_btn">Delete</button>
 											</td>
                                         </tr>
 										{% endfor %}
@@ -259,6 +259,53 @@
             </div>
         </div>
     </div>
+	
+	<!-- Edit Modal-->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Doctor Information</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+				<div class="modal-body">
+					<form id="edit_doctor_form" action="/admin_manage_doctors.html" method="post" class="user" onsubmit="return validateDoctor()">
+						<div class="form-group row">
+							<div class="col-sm-6 mb-3 mb-sm-0">
+								<input name="fname" type="text" class="form-control form-control-user" id="fname" aria-labelledby="exampleFirstName" placeholder="First Name">
+							</div>
+							<div class="col-sm-6">
+								<input name="lname" type="text" class="form-control form-control-user" id="lname" aria-labelledby="exampleLastName" placeholder="Last Name">
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-6">
+								<input name="adhar_id" type="text" class="form-control form-control-user" id="adhar_id" aria-labelledby="adhar_id" placeholder="AadhAr ID">
+							</div>
+							<div class="col-sm-6 mb-3 mb-sm-0">
+								<input name="salary" type="number" class="form-control form-control-user" id="salary" aria-labelledby="salary" placeholder="Salary">
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-6 mb-3 mb-sm-0">
+								<input name="chamber" type="text" class="form-control form-control-user" id="chamber" aria-labelledby="chamber" placeholder="Chamber">
+							</div>
+							<div class="col-sm-6">
+								<input name="timeslot" type="number" class="form-control form-control-user" id="timeslot" aria-labelledby="timeslots" placeholder="Timeslots">
+							</div>
+						</div>
+						<input type="hidden" name="docid" id="docid">
+					</form>
+				</div>
+				<div class="modal-footer">
+                    <button type="submit" form="edit_doctor_form" class="btn btn-secondary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
         <!-- Bootstrap core JavaScript-->
         <script src="../static/vendor/jquery/jquery.min.js"></script>
@@ -278,36 +325,39 @@
         <script src="../static/js/demo/datatables-demo.js"></script>
 		
 		<script>
+			function validateDoctor() {
+				console.log("lol");
+				return true;
+			}
+			
 			$(document).ready(function() {
-				var tbody = $('#table-body');
-				var rows = tbody.find('tr');
-				for(let i = 0; i < rows.length; i++) {
-					var buttons = $(rows[i]).find('button');
-                    var userid = $(rows[i]).find('td');
-					for(var j = 0; j < buttons.length; j++) {
-						if($(buttons[j]).text() === 'Edit') {
-							$(buttons[j]).on('click', (e)=>{
-								console.log("I am an edit button of row " + i);
-                                console.log($(userid[0]).text());
-							});
-						}
-						if($(buttons[j]).text() === 'Delete') {
-							$(buttons[j]).on('click', (e)=>{
-								$(rows[i]).remove();
-                                var url = "/admin_manage_doctors.html";
-                                var params = "action=delete&docid="+$(userid[0]).text().trim();
-                                console.log(params);
-                                var xhr = new XMLHttpRequest();
-                                xhr.open("POST", url, true);
+				$("#table-body").on('click', '.delete_btn', function() {
+					var currentRow=$(this).closest("tr"); 
+					var col1=currentRow.find("td:eq(0)").text(); // get current row 1st TD value
+					currentRow.remove();
+					var url = "/admin_manage_doctors.html";
+					var params = "action=delete&docid="+col1.trim();
+					var xhr = new XMLHttpRequest();
+					xhr.open("POST", url, true);
 
-                                //Send the proper header information along with the request
-                                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+					//Send the proper header information along with the request
+					xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-                                xhr.send(params);
-							});
-						}
-					}
-				}
+					xhr.send(params);
+				});
+				
+				$("#table-body").on('click', '.edit_btn', function() {
+					var currentRow=$(this).closest("tr");
+					$("#docid").val(currentRow.find("td:eq(0)").text().trim());
+					$("#fname").val(currentRow.find("td:eq(1)").text().trim());
+					$("#lname").val(currentRow.find("td:eq(2)").text().trim());
+					$("#adhar_id").val(currentRow.find("td:eq(3)").text().trim());
+					$("#chamber").val(currentRow.find("td:eq(4)").text().trim());
+					console.log(currentRow.find("td:eq(5)").text().trim());
+					console.log(currentRow.find("td:eq(7)").text().trim());
+					$("#salary").val(currentRow.find("td:eq(5)").text().trim());
+					$("#timeslot").val(currentRow.find("td:eq(7)").text().trim());
+				});
 			});
 		</script>
 
