@@ -98,7 +98,7 @@ def page(page_type):
             elif(page_type == 'patient_home.html'):
                 return render_template(page_type, p_name=p_name)
             elif(page_type == 'patient_shop.html'):
-                return render_template(page_type, p_name=p_name)
+                return render_template(page_type, p_name=p_name, items=disp("select item_id, item_name, qty, price from expense"))
             elif(page_type == 'patient_transaction_history.html'):
                 return render_template(page_type, p_name=p_name)
             return render_template(page_type)

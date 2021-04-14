@@ -156,6 +156,40 @@
                     <!-- Page Heading -->
                     <!-- <h1 class="h3 mb-4 text-gray-800">Blank Page</h1> -->
 
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Choose Item to Buy</h6>
+                        </div>
+                        <div class="card-body">
+                            <form> 
+                                <div class="row">
+                                    <div class="col-4 mb-4">
+                                        <select class="custom-select">
+                                            <option selected>Choose Item</option>
+                                            {% for item_select in items %}
+                                            <option value="{{item_select[0]}}">{{item_select[1]}} | Price: Rs. {{item_select[3]}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>                                    
+                                </div>
+                                <div class="row">
+                                    <div class="col-2" >
+                                        <input type="number" class="form-control" placeholder="Enter the Quantity">
+                                    </div>
+                                </div>
+                                
+                                <hr>
+    
+                                <a href="#" class="btn btn-primary btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </span>
+                                    <span class="text">Buy</span>
+                                </a>
+                            </form> 
+                        </div>
+                    </div>
+
                 </div>
                 <!-- /.container-fluid -->
 

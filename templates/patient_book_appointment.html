@@ -156,6 +156,70 @@
                     <!-- Page Heading -->
                     <!-- <h1 class="h3 mb-4 text-gray-800">Blank Page</h1> -->
 
+                    <!-- Booking Appointment -->
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Enter the booking details</h6>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="row">
+                                    <div class="col-4 mb-4">
+                                        <select class="custom-select">
+                                            <option selected>Choose Doctor</option>
+                                            {% for doctor in doctor_names %}
+                                            <option value="{{doctor[0]}}">{{doctor[1]}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>                     
+                                
+                                <label>Choose Date</label>
+
+                                <div class="row">
+                                    
+                                    <div class="col-2 mb" >
+                                        <input type="date" class="form-control" placeholder="DD-MM-YYYY" autocomplete="off" >
+                                    </div>
+    
+                                    <div class="col-2 ">
+                                        <select class="custom-select">
+                                            <option selected>Select a Time Slot</option>
+                                            <option value="1">9 a.m. - 9:30 a.m.</option>
+                                            <option value="2">9:30 a.m. - 10 a.m.</option>
+                                            <option value="3">10 a.m. - 10:30 a.m.</option>
+                                            <option value="4">10:30 a.m. - 11 a.m.</option>
+                                            <option value="5">11 a.m. - 11:30 a.m.</option>
+                                            <option value="6">11:30 a.m. - 12 a.m.</option>
+                                            <option value="7">12 p.m. - 12:30 p.m.</option>
+                                            <option value="8">12:30 a.m. - 1 p.m.</option>
+                                            <option value="9">1 p.m. - 1:30 p.m.</option>
+                                            <option value="10">1:30 p.m. - 2 p.m.</option>
+                                            <option value="11">2 p.m. - 2:30 p.m.</option>
+                                            <option value="12">2:30 p.m. - 3 p.m.</option>
+                                            <option value="13">3 p.m. - 3:30 p.m.</option>
+                                            <option value="14">3:30 p.m. - 4 p.m.</option>
+                                            <option value="15">4 p.m. - 4:30 p.m.</option>
+                                            <option value="16">4:30 p.m. - 5 p.m.</option>
+                                            <option value="17">5 p.m. - 5:30 p.m.</option>
+                                            <option value="18">5:30 p.m. - 6 p.m.</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+          
+                                <hr>
+    
+                                <a href="#" class="btn btn-primary btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                                    <span class="text">Book Appointment</span>
+                                </a>
+                            </form> 
+                        </div>
+                    </div>
+
                 </div>
                 <!-- /.container-fluid -->
 

@@ -193,8 +193,14 @@
 											<td> {{item}} </td>
 											{% endfor %}
 											<td align="center">
-												<button class="edit_btn" data-toggle="modal" data-target="#editModal"> Edit </button>
-												<button class="delete_btn">Delete</button>
+												<button class="edit_btn btn-sm btn-info btn-icon-split" data-toggle="modal" data-target="#editModal"> 
+                                                    <span class="icon"> <i class="fas fa-edit"></i> </span>
+                                                    <span class="text">Edit</span> 
+                                                </button>
+												<button class="delete_btn  btn-sm btn-danger btn-icon-split">
+                                                    <span class="icon"> <i class="fas fa-trash"></i> </span>
+                                                    <span class="text">Delete</span> 
+                                                </button>
 											</td>
                                         </tr>
 										{% endfor %}
@@ -266,13 +272,13 @@
 				<div class="modal-body">
 					<form id="edit_pharmacy_form" action="/admin_manage_pharmacy.html" method="post" class="user" onsubmit="return validateDoctor()">
                         <div class = "form-group col">
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 mb-2">
                                 <input name="item_name" type="text" class="form-control form-control-user" id="item_name" aria-labelledby="exampleFirstName" placeholder="Item name">
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 mb-2">
                                 <input name="qty" type="number" class="form-control form-control-user" id="qty" aria-labelledby="exampleLastName" placeholder="Quantity">
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 mb-2">
                                 <input name="price" type="number" class="form-control form-control-user" id="price" aria-labelledby="adhar_id" placeholder="Price">
                             </div>
                         </div>
