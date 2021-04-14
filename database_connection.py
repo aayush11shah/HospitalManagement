@@ -5,9 +5,11 @@ password = 'password'
 conn = create_db_connection("localhost", username, password)
 
 def execute_query(query):
+    conn = create_db_connection("localhost", username, password, "hospital")
     Connector.execute_query(conn, query)
     
 def disp(query):
+    conn = create_db_connection("localhost", username, password,"hospital")
     return Connector.disp(conn, query)
     
 def init():    
