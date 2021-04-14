@@ -65,6 +65,15 @@ def manage_doctor():
         execute_query('update doctor set first_name = "' + form['fname'] + '", last_name = "' + form['lname'] + '", aadhar_id = ' + form['adhar_id'] + ', chamber = "' + form['chamber'] + '", salary = ' + form['salary'] + ', timeslot = "' + form['timeslot'] + '" where doc_id = ' + form['docid'])
     return render_template("admin_manage_doctors.html", doctor_table=disp("select doc_id, first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor"))
 
+@app.route('/admin_manage_pharmacy.html', methods=['POST'])
+def manage_pharmacy():
+    form = request.form
+    if "action" in form.keys() and form["action"] == "delete":
+        execute_query("delete from expense where item_id = " +form["itemid"])
+    else:
+        execute_query('update expense set item_name = "' + form['item_name'] + '", qty = ' + form['qty'] + ', price = ' + form['price'] + ' where item_id = ' + form['itemid'])
+    return render_template("admin_manage_pharmacy.html", pharmacy=disp("select item_id, item_name, qty, price from expense"))
+
 @app.route('/<page_type>', methods=['GET'])
 def page(page_type):
     if(page_type == "patient_register.html"):
