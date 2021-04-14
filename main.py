@@ -78,12 +78,12 @@ def page(page_type):
                 return render_template(page_type, patient_table=disp("select p_id, p_name, blood_grp, age, gender, ph_no, address, aadhar_id, p_history from patient"))
             elif(page_type == 'admin_manage_pharmacy.html'):
                 return render_template(page_type, pharmacy=disp("select item_id, item_name, qty, price from expense"))
-            return render_template(page_type)   
+            return render_template(page_type)
         elif(login[request.remote_addr][0] == 'p'):
             m_status = login[request.remote_addr]
             p_name = str(disp("select p_name from patient where p_id = " + m_status[1:])[0][0])
             if(page_type == 'patient_book_appointment.html'):
-                return render_template(page_type, p_name=p_name)
+                return render_template(page_type, p_name=p_name, doctor_names=disp('select doc_id, concat(first_name, " ", last_name) from doctor;'))
             elif(page_type == 'patient_book_room.html'):
                 return render_template(page_type, p_name=p_name)
             elif(page_type == 'patient_home.html'):
