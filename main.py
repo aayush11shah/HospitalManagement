@@ -73,7 +73,6 @@ def page(page_type):
     if(request.remote_addr in login.keys()):
         if(login[request.remote_addr] == 'a'):
             if(page_type == 'admin_manage_doctors.html'):
-                print(disp("select doc_id, first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor"))
                 return render_template(page_type, doctor_table=disp("select doc_id, first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor"))
             elif(page_type == 'admin_manage_patients.html'):
                 return render_template(page_type, patient_table=disp("select p_id, p_name, blood_grp, age, gender, ph_no, address, aadhar_id, p_history from patient"))
