@@ -9,13 +9,17 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Hospital System - Patient Shop</title>
+    <title>Hospital System - Patient Shop Cart</title>
 
     <!-- Custom fonts for this template-->
     <link href="../static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
+    
+    <style>
+        .big-checkbox {width: 20px; height: 20px; margin: 10px;}
+    </style>
 
     <!-- Custom styles for this template-->
     <link href="../static/css/sb-admin-2.min.css" rel="stylesheet">
@@ -123,7 +127,7 @@
                     </button>
 
                     <div class="d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100 ">
-                        <h1 class="h3 text-gray-800">Shop</h1>
+                        <h1 class="h3 text-gray-800">Shop Cart</h1>
                     </div>
 
                     <div class="topbar-divider d-none d-sm-block"></div>
@@ -158,61 +162,74 @@
 
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Choose Item to Buy</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Choose Item to Checkout</h6>
                         </div>
                         <div class="card-body">
                             <form> 
                                 <div class="row">
-                                    <div class="col-4 mb-4">
-                                        <select id="item_select" class="custom-select">
-                                            <option selected>Choose Item</option>
-                                            {% for item_select in items %}
-												{% if item_select[2] > 0 %}
-													<option value="{{item_select[0]}}">{{item_select[1]}} | Price: Rs. {{item_select[3]}}</option>
-												{% endif %}
-											{% endfor %}
-                                        </select>
-                                    </div>                                    
-                                </div>
-                                <div class="row">
-                                    <div class="col-2" >
-                                        <input id="item_quantity" type="number" class="form-control" placeholder="Enter the Quantity">
-                                    </div>
-                                </div>
-                                
-                                <hr>
-    
-                                <a  href="#" class="btn btn-primary btn-icon-split">
-                                    <span class="icon text-white-50">
-                                        <i class="fas fa-shopping-cart"></i>
-                                    </span>
-                                    <span class="text">Buy</span>
-                                </a>
-                                <div class="row">
                                     <div class="col">
-                                        <a id="buy_btn" href="#" class="btn btn-primary btn-icon-split">
-                                            <span class="icon text-white-50">
-                                                <i class="fas fa-cart-plus"></i>
-                                            </span>
-                                            <span class="text">Add To Cart</span>
-                                        </a>
-										<span id="message_span" style="color:red;padding:5px;">{{message}}</span>
-                                    </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input big-checkbox" type="checkbox" id="item1">
+                                            <label class="form-check-label text-lg ml-2" for="item1">
+                                              Item 1 | Amount: Rs. 100
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input big-checkbox" type="checkbox" id="item2">
+                                            <label class="form-check-label text-lg ml-2" for="item2">
+                                              Item 2 | Amount: Rs. 200
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input big-checkbox" type="checkbox" id="item3">
+                                            <label class="form-check-label text-lg ml-2" for="item3">
+                                              Item 3 | Amount: Rs. 50 
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input big-checkbox" type="checkbox" id="item4">
+                                            <label class="form-check-label text-lg ml-2" for="item4">
+                                              Item 4 | Amount: Rs. 150
+                                            </label>
+                                        </div>
+                                    </div>                                 
                                 </div>
+                             
+                                <hr>
+
+                                <div class="row mb-2">
+                                    <div class="col">
+                                        <h6 class="m-0 font-weight-bold text-primary">Total Amount: Rs. 500</h6>
+                                    </div> 
+                                </div>
+                                <div class="row"> 
+                                    <div class="col">
+                                        <a href="#" class="btn btn-primary btn-icon-split">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-rupee-sign"></i>
+                                            </span>
+                                            <span class="text">Pay</span>
+                                        </a>
+                                    </div>
+                                </div>                               
                             </form> 
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col">
-                            <a href="patient_shop_cart.html" class="btn btn-primary btn-icon-split">
+                            <a href="patient_shop.html" class="btn btn-light btn-icon-split">
                                 <span class="icon text-white-50">
-                                    <i class="fas fa-shopping-cart"></i>
+                                    <i class="fas fa-chevron-left"></i>
                                 </span>
-                                <span class="text">Go To Cart</span>
+                                <span class="text">Back To Shop</span>
                             </a>
                         </div>
-                    </div>     
+                    </div> 
+
                 </div>
                 <!-- /.container-fluid -->
 
@@ -270,34 +287,6 @@
 
     <!-- Custom scripts for all pages-->
     <script src="../static/js/sb-admin-2.min.js"></script>
-	
-	<script>
-		$(document).ready(function() {
-			$('#buy_btn').on('click', function() {
-				var selected_item = $('#item_select').find('option:selected');
-				for(let i = 0; i < items.length; i++) {
-					if(items[i][0] == selected_item.val()) {
-						var quantity = $('#item_quantity').val();
-						if(quantity > items[i][2]) {
-							$('#message_span').text('Not enough quantity.');
-						}
-						else {
-							var url = "/patient_shop.html";
-							var params = "itemid="items[i][0]+"&quantity="+quantity;
-							var xhr = new XMLHttpRequest();
-							xhr.open("POST", url, true);
-
-							//Send the proper header information along with the request
-							xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-							xhr.send(params);
-						}
-						break;
-					}
-				}
-			});
-		});
-	</script>
 
 </body>
 
