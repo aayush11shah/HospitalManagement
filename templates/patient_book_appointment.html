@@ -179,7 +179,7 @@
                                 <div class="row">
                                     
                                     <div class="col-2 mb" >
-                                        <input type="date" class="form-control" placeholder="DD-MM-YYYY" autocomplete="off" >
+                                        <input id="date_select" type="date" class="form-control" placeholder="DD-MM-YYYY" autocomplete="off" >
                                     </div>
     
                                     <div class="col-2 ">
@@ -200,6 +200,7 @@
                                     </span>
                                     <span class="text">Book Appointment</span>
                                 </a>
+								<span id="message_span" style="color:red;padding:5px;">{{message}}</span>
                             </form> 
                         </div>
                     </div>
@@ -271,7 +272,6 @@
 				var selected_option = $(this).find('option:selected');
 				$('#slot_select').empty().append('<option selected value="-1">Choose a doctor</option>');
 				if(parseInt(selected_option.val(), 10) >= 0) {
-					console.log(doctor_slots);
 					for(let i = 0; i < doctor_slots.length; i+=2) {
 						if(doctor_slots[i] == selected_option.val()) {
 							for(let j = 0; j < doctor_slots[i+1].length; j++) {
@@ -299,6 +299,24 @@
 							}
 						}
 					}
+				}
+			});
+			$('#book_btn').on('click', function() {
+				var selected_doc = $('#doc_choose').find('option:selected');
+				var selected_slot = $('#slot_select').find('option:selected');
+				var selected_date = $('#date_select').val();
+				if(selected_doc.val() == -1) $('#message_span').text('Please select a doctor.');
+				else if(selected_slot.val() == -1) $('#message_span').text('Please select a slot.');
+				else if(selected_date.length == 0)$('#message_span').text('Please select a valid date.');
+				else {
+					var url = "/patient_book_appointment.html";
+					var params = "slot="+selected_slot.val()+"&docid="+selected_doc.val()+"&date="+selected_date+"&p_name={{p_name}}";
+					var xhr = new XMLHttpRequest();
+					xhr.open("POST", url, true);
+
+					xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+					xhr.send(params);
 				}
 			});
 		});

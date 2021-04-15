@@ -78,11 +78,22 @@ def manage_pharmacy():
         execute_query('update expense set item_name = "' + form['item_name'] + '", qty = ' + form['qty'] + ', price = ' + form['price'] + ' where item_id = ' + form['itemid'])
     return render_template("admin_manage_pharmacy.html", pharmacy=disp("select item_id, item_name, qty, price from expense"))
 
+<<<<<<< HEAD
 @app.route('/patient_shop.html', methods=['POST'])
 def add_to_cart():
     form = request.form
     new_transaction(login[request.remote_addr][1:], form['itemid'], form['quantity'])
     return render_template('patient_shop.html', p_name=p_name, items=disp("select item_id, item_name, qty, price from expense"), message='Item added to cart')
+=======
+@app.route('/patient_book_appointment.html', methods=['POST'])
+def book_appointment():
+    form = request.form
+    p_id = login[request.remote_addr][1:]
+    item_id = str(disp('select item_id from expense where item_name="consultation"')[0][0])
+    new_transaction(p_id, item_id, 1)
+    execute_query('insert into appointment values(' + p_id +', ' + form['docid'] + ', ' + '"'+ form['date'] +'", ' + form['slot'] + ');')
+    return render_template('patient_book_appointment.html', p_name=form['p_name'], doctor_names=disp('select doc_id, concat(first_name, " ", last_name) from doctor;'), doctor_slots=disp('select doc_id,timeslot from doctor;'), message="Appointment booked.")
+>>>>>>> dd7310c (stuck on absence of transaction id)
     
 def new_transaction(p_id, item_id, qty_bought):
     execute_query('insert into transact values(' + str(p_id) + ',' + str(item_id) + ',0,' + str(qty_bought) +')')
@@ -105,7 +116,7 @@ def page(page_type):
             m_status = login[request.remote_addr]
             p_name = str(disp("select p_name from patient where p_id = " + m_status[1:])[0][0])
             if(page_type == 'patient_book_appointment.html'):
-                return render_template(page_type, p_name=p_name, doctor_names=disp('select doc_id, concat(first_name, " ", last_name) from doctor;'), doctor_slots=disp('select doc_id,timeslot from doctor;'))
+                return render_template(page_type, p_name=p_name, doctor_names=disp('select doc_id, concat(first_name, " ", last_name) from doctor;'), doctor_slots=disp('select doc_id,timeslot from doctor;'), message="")
             elif(page_type == 'patient_book_room.html'):
                 return render_template(page_type, p_name=p_name)
             elif(page_type == 'patient_home.html'):

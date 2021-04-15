@@ -182,12 +182,6 @@
                                 
                                 <hr>
     
-                                <a  href="#" class="btn btn-primary btn-icon-split">
-                                    <span class="icon text-white-50">
-                                        <i class="fas fa-shopping-cart"></i>
-                                    </span>
-                                    <span class="text">Buy</span>
-                                </a>
                                 <div class="row">
                                     <div class="col">
                                         <a id="buy_btn" href="#" class="btn btn-primary btn-icon-split">
@@ -282,6 +276,7 @@
 							$('#message_span').text('Not enough quantity.');
 						}
 						else {
+<<<<<<< HEAD
 							var url = "/patient_shop.html";
 							var params = "itemid="items[i][0]+"&quantity="+quantity;
 							var xhr = new XMLHttpRequest();
@@ -291,6 +286,9 @@
 							xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
 							xhr.send(params);
+=======
+							
+>>>>>>> dd7310c (stuck on absence of transaction id)
 						}
 						break;
 					}
