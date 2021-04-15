@@ -164,28 +164,31 @@
                             <form> 
                                 <div class="row">
                                     <div class="col-4 mb-4">
-                                        <select class="custom-select">
+                                        <select id="item_select" class="custom-select">
                                             <option selected>Choose Item</option>
                                             {% for item_select in items %}
-                                            <option value="{{item_select[0]}}">{{item_select[1]}} | Price: Rs. {{item_select[3]}}</option>
-                                            {% endfor %}
+												{% if item_select[2] > 0 %}
+													<option value="{{item_select[0]}}">{{item_select[1]}} | Price: Rs. {{item_select[3]}}</option>
+												{% endif %}
+											{% endfor %}
                                         </select>
                                     </div>                                    
                                 </div>
                                 <div class="row">
                                     <div class="col-2" >
-                                        <input type="number" class="form-control" placeholder="Enter the Quantity">
+                                        <input id="item_quantity" type="number" class="form-control" placeholder="Enter the Quantity">
                                     </div>
                                 </div>
                                 
                                 <hr>
     
-                                <a href="#" class="btn btn-primary btn-icon-split">
+                                <a id="buy_btn" href="#" class="btn btn-primary btn-icon-split">
                                     <span class="icon text-white-50">
                                         <i class="fas fa-shopping-cart"></i>
                                     </span>
                                     <span class="text">Buy</span>
                                 </a>
+								<span id="message_span" style="color:red;"></span>
                             </form> 
                         </div>
                     </div>
@@ -247,6 +250,34 @@
 
     <!-- Custom scripts for all pages-->
     <script src="../static/js/sb-admin-2.min.js"></script>
+	
+	<script>
+		$(document).ready(function() {
+			$('#buy_btn').on('click', function() {
+				var selected_item = $('#item_select').find('option:selected');
+				for(let i = 0; i < items.length; i++) {
+					if(items[i][0] == selected_item.val()) {
+						var quantity = $('#item_quantity').val();
+						if(quantity > items[i][2]) {
+							$('#message_span').text('Not enough quantity.');
+						}
+						else {
+							var url = "/patient_shop.html";
+							var params = "itemid="items[i][0]+"&quantity="+quantity;
+							var xhr = new XMLHttpRequest();
+							xhr.open("POST", url, true);
+
+							//Send the proper header information along with the request
+							xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+							xhr.send(params);
+						}
+						break;
+					}
+				}
+			});
+		});
+	</script>
 
 </body>
 

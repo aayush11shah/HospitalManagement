@@ -76,6 +76,11 @@ def manage_pharmacy():
         execute_query('update expense set item_name = "' + form['item_name'] + '", qty = ' + form['qty'] + ', price = ' + form['price'] + ' where item_id = ' + form['itemid'])
     return render_template("admin_manage_pharmacy.html", pharmacy=disp("select item_id, item_name, qty, price from expense"))
 
+@app.route('/patient_shop.html', methods=['POST'])
+def add_to_cart():
+    form = request.form
+    
+
 @app.route('/<page_type>', methods=['GET'])
 def page(page_type):
     if(page_type == "patient_register.html"):
