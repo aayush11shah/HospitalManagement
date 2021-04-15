@@ -164,7 +164,10 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                            <div class="row" id="add_div">
+                                <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                                <button class="edit_btn btn-primary btn-sm ml-auto" data-toggle="modal" data-target="#addModal">Add Doctor</button>                            
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -315,6 +318,65 @@
         </div>
     </div>
 
+    <!-- Add Modal-->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Doctor Information</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+				<div class="modal-body">
+					<form name="add_doctor_form" id="add_doctor_form" action="/admin_manage_doctors.html" method="post" class="user" onsubmit="return validateDoctor()">
+						<div class="form-group row">
+							<div class="col-sm-6 mb-3 mb-sm-0">
+								<input name="docid" type="text" class="form-control form-control-user" id="docid" aria-labelledby="docid" placeholder="Doctor Id">
+							</div>
+							<div class="col-sm-6">
+								<input name="pass" type="text" class="form-control form-control-user" id="pass" aria-labelledby="pass" placeholder="Password">
+							</div>
+						</div>
+                        <div class="form-group row">
+							<div class="col-sm-6 mb-3 mb-sm-0">
+								<input name="fname" type="text" class="form-control form-control-user" id="fname" aria-labelledby="exampleFirstName" placeholder="First Name">
+							</div>
+							<div class="col-sm-6">
+								<input name="lname" type="text" class="form-control form-control-user" id="lname" aria-labelledby="exampleLastName" placeholder="Last Name">
+							</div>
+						</div>
+                        <div class="form-group row">
+							<div class="col-sm-6 mb-3 mb-sm-0">
+								<input name="dept" type="number" class="form-control form-control-user" id="dept" aria-labelledby="exampleFirstName" placeholder="department">
+                            </div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-6">
+								<input name="adhar_id" type="text" class="form-control form-control-user" id="adhar_id" aria-labelledby="adhar_id" placeholder="AadhAr ID">
+							</div>
+							<div class="col-sm-6 mb-3 mb-sm-0">
+								<input name="salary" type="number" class="form-control form-control-user" id="salary" aria-labelledby="salary" placeholder="Salary">
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-6 mb-3 mb-sm-0">
+								<input name="chamber" type="text" class="form-control form-control-user" id="chamber" aria-labelledby="chamber" placeholder="Chamber">
+							</div>
+							<div class="col-sm-6">
+								<input name="timeslot" type="number" class="form-control form-control-user" id="timeslot" aria-labelledby="timeslots" placeholder="Timeslots">
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+                    <button type="submit" form="add_doctor_form" class="btn btn-secondary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
         <!-- Bootstrap core JavaScript-->
         <script src="../static/vendor/jquery/jquery.min.js"></script>
         <script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -365,6 +427,47 @@
 					console.log(currentRow.find("td:eq(7)").text().trim());
 					$("#salary").val(currentRow.find("td:eq(5)").text().trim());
 					$("#timeslot").val(currentRow.find("td:eq(7)").text().trim());
+				});
+                 
+                $("#add_div").on('click', '.edit_btn', function() {
+                    var oform = document.forms["add_doctor_form"].value;
+                    var docid = oform.elements["docid"];
+                    var pass = oform.elements["pass"];
+                    var fname = oform.elements["fname"];
+                    var lname = oform.elements["lname"];
+                    var dept = oform.elements["dept"]
+                    var adhar_id = oform.elements["adhar_id"];
+                    var chamber = oform.elements["chamber"];
+                    var salary = oform.elements["salary"];
+                    var timeslot = oform.elements["timeslot"];
+
+                    var table = document.getElementById("dataTable");
+                    var row = table.insertRow(0);
+                    var cell0 = row.insertCell(0);
+                    cell0.innerHTML = docid;
+                    var cell1 = row.insertCell(1);
+                    cell1.innerHTML = fname;
+                    var cell2 = row.insertCell(2);
+                    cell2.innerHTML = lname;
+                    var cell3 = row.insertCell(3);
+                    cell3.innerHTML = adhar_id;
+                    var cell4 = row.insertCell(4);
+                    cel4.innerHTML = chamber;
+                    var cell5 = row.insertCell(5);
+                    cell5.innerHTML = salary;
+                    var cell6 = row.insertCell(6);
+                    cell6.innerHTML = dept;
+                    var cell7 = row.insertCell(7);
+                    cell6.innerHTML = timeslot;
+                    // var cell8 = row.insertCell(8);
+                    // cell7.innerHTML = '<button class="edit_btn btn-sm btn-info btn-icon-split" data-toggle="modal" data-target="#editModal">' 
+                    //                                 +'<span class="icon"> <i class="fas fa-edit"></i> </span>'
+                    //                                 +'<span class="text">Edit</span>' 
+                    //                             +'</button>'
+					// 							+'<button class="delete_btn  btn-sm btn-danger btn-icon-split">'
+                    //                                 +'<span class="icon"> <i class="fas fa-trash"></i> </span>'
+                    //                                 +'<span class="text">Delete</span>' 
+                    //                             +'</button>'
 				});
 			});
 		</script>

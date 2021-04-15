@@ -61,6 +61,8 @@ def manage_doctor():
     form = request.form
     if "action" in form.keys() and form["action"] == "delete":
         execute_query("delete from doctor where doc_id = " +form["docid"])
+    elif "pass" in form.keys():
+        execute_query("insert into doctor values (" + form['docid'] + ",'" + form['pass'] + "','" + form['fname'] + "','" +  form['lname'] + "'," + form['adhar_id'] + ",'" + form['chamber'] + "',"+form['salary']+"," + form['dept'] +",'"+form['timeslot'] + "')")
     else:
         execute_query('update doctor set first_name = "' + form['fname'] + '", last_name = "' + form['lname'] + '", aadhar_id = ' + form['adhar_id'] + ', chamber = "' + form['chamber'] + '", salary = ' + form['salary'] + ', timeslot = "' + form['timeslot'] + '" where doc_id = ' + form['docid'])
     return render_template("admin_manage_doctors.html", doctor_table=disp("select doc_id, first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor"))
