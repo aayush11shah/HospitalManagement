@@ -165,8 +165,8 @@
                             <form>
                                 <div class="row">
                                     <div class="col-4 mb-4">
-                                        <select class="custom-select">
-                                            <option selected>Choose Doctor</option>
+                                        <select id="doc_choose" class="custom-select">
+                                            <option value="-1" selected>Choose Doctor</option>
                                             {% for doctor in doctor_names %}
                                             <option value="{{doctor[0]}}">{{doctor[1]}}</option>
                                             {% endfor %}
@@ -183,26 +183,10 @@
                                     </div>
     
                                     <div class="col-2 ">
-                                        <select class="custom-select">
-                                            <option selected>Select a Time Slot</option>
-                                            <option value="1">9 a.m. - 9:30 a.m.</option>
-                                            <option value="2">9:30 a.m. - 10 a.m.</option>
-                                            <option value="3">10 a.m. - 10:30 a.m.</option>
-                                            <option value="4">10:30 a.m. - 11 a.m.</option>
-                                            <option value="5">11 a.m. - 11:30 a.m.</option>
-                                            <option value="6">11:30 a.m. - 12 a.m.</option>
-                                            <option value="7">12 p.m. - 12:30 p.m.</option>
-                                            <option value="8">12:30 a.m. - 1 p.m.</option>
-                                            <option value="9">1 p.m. - 1:30 p.m.</option>
-                                            <option value="10">1:30 p.m. - 2 p.m.</option>
-                                            <option value="11">2 p.m. - 2:30 p.m.</option>
-                                            <option value="12">2:30 p.m. - 3 p.m.</option>
-                                            <option value="13">3 p.m. - 3:30 p.m.</option>
-                                            <option value="14">3:30 p.m. - 4 p.m.</option>
-                                            <option value="15">4 p.m. - 4:30 p.m.</option>
-                                            <option value="16">4:30 p.m. - 5 p.m.</option>
-                                            <option value="17">5 p.m. - 5:30 p.m.</option>
-                                            <option value="18">5:30 p.m. - 6 p.m.</option>
+                                        <select id="slot_select" class="custom-select">
+											{% for timeslot in doctor_slots %}
+											<option value="{{timeslot[0]}}">{{timeslot[1]}}</option>
+											{% endfor %}
                                         </select>
                                     </div>
 
@@ -210,7 +194,7 @@
           
                                 <hr>
     
-                                <a href="#" class="btn btn-primary btn-icon-split">
+                                <a id="book_btn" href="#" class="btn btn-primary btn-icon-split">
                                     <span class="icon text-white-50">
                                         <i class="fas fa-check"></i>
                                     </span>
@@ -277,6 +261,48 @@
 
     <!-- Custom scripts for all pages-->
     <script src="../static/js/sb-admin-2.min.js"></script>
+	
+	<script>
+		var doctor_slots = [];
+		$(document).ready(function() {
+			doctor_slots = $('#slot_select>option').map(function() { return [$(this).val(), $(this).text()]; });
+			$('#slot_select').empty().append('<option selected value="-1">Choose a doctor</option>');
+			$('#doc_choose').on('change', function() {
+				var selected_option = $(this).find('option:selected');
+				$('#slot_select').empty().append('<option selected value="-1">Choose a doctor</option>');
+				if(parseInt(selected_option.val(), 10) >= 0) {
+					console.log(doctor_slots);
+					for(let i = 0; i < doctor_slots.length; i+=2) {
+						if(doctor_slots[i] == selected_option.val()) {
+							for(let j = 0; j < doctor_slots[i+1].length; j++) {
+								if(doctor_slots[i+1][j] == '1') {
+									var start_hour = Math.floor(9 + j/2);
+									var start_min = (j%2)*30;
+									var ampm_start = "am";
+									if(start_hour > 12) {
+										start_hour -= 12;
+										ampm_start = "pm";
+									}
+									var end_hour = start_hour;
+									var end_min = start_min + 30;
+									if(end_min == 60) {
+										end_hour += 1;
+										end_min = 0;
+									}
+									var ampm_end = "am";
+									if(end_hour > 12) {
+										end_hour -= 12;
+										ampm_end = "pm";
+									}
+									$('#slot_select').append('<option value=' + j + '>' + Math.floor(start_hour/10) + (start_hour%10) + ':' + Math.floor(start_min/10) + (start_min%10) + ' ' + ampm_start + ' - ' + Math.floor(end_hour/10) + (end_hour%10) + ':' + Math.floor(end_min/10) + (end_min%10) + ' ' + ampm_end +'</option>');
+								}
+							}
+						}
+					}
+				}
+			});
+		});
+	</script>
 
 </body>
 

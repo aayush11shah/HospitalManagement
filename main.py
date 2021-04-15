@@ -92,7 +92,7 @@ def page(page_type):
             m_status = login[request.remote_addr]
             p_name = str(disp("select p_name from patient where p_id = " + m_status[1:])[0][0])
             if(page_type == 'patient_book_appointment.html'):
-                return render_template(page_type, p_name=p_name, doctor_names=disp('select doc_id, concat(first_name, " ", last_name) from doctor;'))
+                return render_template(page_type, p_name=p_name, doctor_names=disp('select doc_id, concat(first_name, " ", last_name) from doctor;'), doctor_slots=disp('select doc_id,timeslot from doctor;'))
             elif(page_type == 'patient_book_room.html'):
                 return render_template(page_type, p_name=p_name)
             elif(page_type == 'patient_home.html'):
