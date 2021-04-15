@@ -23,8 +23,7 @@ alter_transact = """
 ALTER TABLE transact
 
 ADD FOREIGN KEY(item_id)
-REFERENCES expense(item_id)
-ON DELETE SET NULL,
+REFERENCES expense(item_id),
 
 ADD FOREIGN KEY(p_id)
 REFERENCES patient(p_id);
