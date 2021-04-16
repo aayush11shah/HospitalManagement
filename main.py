@@ -72,6 +72,8 @@ def manage_pharmacy():
     form = request.form
     if "action" in form.keys() and form["action"] == "delete":
         execute_query("delete from expense where item_id = " +form["itemid"])
+    elif "itemadd" in form.keys():
+        execute_query("insert into expense values (" + form['itemid'] + ",'" + form['item_name'] + "'," + form['qty'] + "," + form['price'] + ")")
     else:
         execute_query('update expense set item_name = "' + form['item_name'] + '", qty = ' + form['qty'] + ', price = ' + form['price'] + ' where item_id = ' + form['itemid'])
     return render_template("admin_manage_pharmacy.html", pharmacy=disp("select item_id, item_name, qty, price from expense"))

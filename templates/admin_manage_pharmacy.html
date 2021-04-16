@@ -163,7 +163,10 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                            <div class="row" id="add_div">
+                                <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                                <button class="edit_btn btn-primary btn-sm ml-auto" data-toggle="modal" data-target="#addModal">Add Item</button>                            
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -292,6 +295,43 @@
         </div>
     </div>
 
+    <!-- Add Modal-->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Item Information</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+				<div class="modal-body">
+					<form id="add_pharmacy_form" name="add_pharmacy_form" action="/admin_manage_pharmacy.html" method="post" class="user" onsubmit="return validateDoctor()">
+                        <div class = "form-group col">
+                            <div class="col-sm-6 mb-2">
+                                <input name="itemid" type="number" class="form-control form-control-user" id="itemid" aria-labelledby="exampleFirstName" placeholder="Item ID">
+                            </div>
+                            <div class="col-sm-6 mb-2">
+                                <input name="item_name" type="text" class="form-control form-control-user" id="item_name" aria-labelledby="exampleFirstName" placeholder="Item name">
+                            </div>
+                            <div class="col-sm-6 mb-2">
+                                <input name="qty" type="number" class="form-control form-control-user" id="qty" aria-labelledby="exampleLastName" placeholder="Quantity">
+                            </div>
+                            <div class="col-sm-6 mb-2">
+                                <input name="price" type="number" class="form-control form-control-user" id="price" aria-labelledby="adhar_id" placeholder="Price">
+                            </div>
+                        </div>
+                        <input type="hidden" name="itemadd" id="itemadd">
+					</form>
+				</div>
+				<div class="modal-footer">
+                    <button type="submit" form="add_pharmacy_form" class="btn btn-secondary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap core JavaScript-->
     <script src="../static/vendor/jquery/jquery.min.js"></script>
     <script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -338,6 +378,36 @@
                 $("#qty").val(currentRow.find("td:eq(2)").text().trim());
                 $("#price").val(currentRow.find("td:eq(3)").text().trim());
             });
+
+            $("#add_div").on('click', '.edit_btn', function() {
+                    var oform = document.forms["add_pharmacy_form"].value;
+                    var itemid = oform.elements["itemid"].value;
+                    var item_name = oform.elements["item_name"].value;
+                    var qty = oform.elements["qty"].value;
+                    var price = oform.elements["price"].value;
+
+                    var table = document.getElementById("dataTable");
+                    var row = table.insertRow(0);
+                    var cell0 = row.insertCell(0);
+                    cell0.innerHTML = itemid;
+                    var cell1 = row.insertCell(1);
+                    cell1.innerHTML = item_name;
+                    var cell2 = row.insertCell(2);
+                    cell2.innerHTML = qty;
+                    var cell3 = row.insertCell(3);
+                    cell3.innerHTML = price;
+                    // var cell8 = row.insertCell(8);
+                    // cell7.innerHTML = '<button class="edit_btn btn-sm btn-info btn-icon-split" data-toggle="modal" data-target="#editModal">' 
+                    //                                 +'<span class="icon"> <i class="fas fa-edit"></i> </span>'
+                    //                                 +'<span class="text">Edit</span>' 
+                    //                             +'</button>'
+					// 							+'<button class="delete_btn  btn-sm btn-danger btn-icon-split">'
+                    //                                 +'<span class="icon"> <i class="fas fa-trash"></i> </span>'
+                    //                                 +'<span class="text">Delete</span>' 
+                    //                             +'</button>'
+				});
+
+
         });
     </script>
 
