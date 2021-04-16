@@ -50,11 +50,13 @@ CREATE TABLE expense (
 
 create_transact_table = """
 CREATE TABLE transact (
+	transact_id int,
 	p_id INT ,
 	item_id INT ,
 	pay_status INT,
 	qty_bought INT,
-	primary key (p_id, item_id)
+	dt DATETIME,
+	primary key (transact_id)
 );
 """
 
