@@ -139,8 +139,8 @@ def page(page_type):
             return render_template(page_type)
         elif(login[request.remote_addr][0] == 'd'):
             m_status = login[request.remote_addr]
-            d_name = str(disp("select first_name, last_name from patient where p_id = " + m_status[1:])[0])
-            d_name = d_name[0] + " " + d_name[1]
+            d_name = disp("select first_name, last_name from doctor where doc_id = " + m_status[1:])
+            d_name = d_name[0][0] + " " + d_name[0][1]
             if(page_type == 'doctor_appointments.html'):
                 return render_template(page_type, d_name=d_name)
             elif(page_type == 'doctor_home.html'):

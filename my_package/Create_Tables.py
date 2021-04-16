@@ -93,6 +93,17 @@ CREATE TABLE appointment (
 );
 """
 
+create_appointment2_table = """
+CREATE TABLE appointment (
+	p_id INT ,
+	doc_id INT ,
+	start_date DATE,
+	time INT,
+	primary key (Doc_id, DATE, TIME)
+);
+"""
+
+
 ''' A function to make all the tables for the database '''
 def maketables(connection):
 
@@ -104,6 +115,6 @@ def maketables(connection):
 	execute_query(connection, create_room_table)
 	execute_query(connection, create_staff_table)
 	execute_query(connection, create_job_table)
-	execute_query(connection, create_appointment_table)
+	execute_query(connection, create_appointment2_table)
 
 	print("Robust Tables have been created..")
