@@ -431,15 +431,15 @@
                  
                 $("#add_div").on('click', '.edit_btn', function() {
                     var oform = document.forms["add_doctor_form"].value;
-                    var docid = oform.elements["docid"];
-                    var pass = oform.elements["pass"];
-                    var fname = oform.elements["fname"];
-                    var lname = oform.elements["lname"];
-                    var dept = oform.elements["dept"]
-                    var adhar_id = oform.elements["adhar_id"];
-                    var chamber = oform.elements["chamber"];
-                    var salary = oform.elements["salary"];
-                    var timeslot = oform.elements["timeslot"];
+                    var docid = oform.elements["docid"].value;
+                    var pass = oform.elements["pass"].value;
+                    var fname = oform.elements["fname"].value;
+                    var lname = oform.elements["lname"].value;
+                    var dept = oform.elements["dept"].value;
+                    var adhar_id = oform.elements["adhar_id"].value;
+                    var chamber = oform.elements["chamber"].value;
+                    var salary = oform.elements["salary"].value;
+                    var timeslot = oform.elements["timeslot"].value;
 
                     var table = document.getElementById("dataTable");
                     var row = table.insertRow(0);
