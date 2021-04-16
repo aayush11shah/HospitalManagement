@@ -1,5 +1,6 @@
-from flask import Flask, request, render_template, json
+from flask import Flask,Response, request, render_template, json
 import os
+from fpdf import FPDF
 from database_connection import *
 app = Flask(__name__)
 login = {}
@@ -121,6 +122,55 @@ def page(page_type):
         if(page_type == "home.html"):
             del login[request.remote_addr]
         return render_template(page_type)
+
+@app.route('/admin_report/download')
+def download_report():
+        return (get_pdf())
+    
+    
+def get_pdf(report = "expense"):
+    try:
+        get_header = disp("desc " + report)
+        heads = []
+        for tup in get_header:
+            heads.append(tup[0])
+            
+        result = disp("select * from " + report)
+        pdf = FPDF()
+        pdf.add_page()
+
+        page_width = pdf.w - 2 * pdf.l_margin 
+
+        pdf.set_font('Times','B',24.0) 
+        pdf.cell(page_width, 0.0, 'Item Data', align='C')
+        pdf.ln(10)
+
+        col_width = page_width/4
+
+        pdf.ln(1)
+
+        th = pdf.font_size
+        
+        for head in heads:
+            pdf.set_font('Times', 'B', 14.0)
+            pdf.cell(col_width, 2*th, head, border=1)
+        pdf.ln(2*th) 
+        
+        pdf.set_font('Courier', '', 12)
+        for row in result:
+            for el in row:
+                pdf.cell(col_width, th, str(el), border=1)
+            pdf.ln(th)
+        
+        pdf.ln(10)
+
+        pdf.set_font('Times','',10.0) 
+        pdf.cell(page_width, 0.0, '- end of report -', align='C')
+        return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=Expense_report.pdf'})    
+    except Exception as e:
+        print(e)
+
+
 
 if __name__ == '__main__':
     init()
