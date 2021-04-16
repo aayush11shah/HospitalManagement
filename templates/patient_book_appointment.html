@@ -162,7 +162,7 @@
                             <h6 class="m-0 font-weight-bold text-primary">Enter the booking details</h6>
                         </div>
                         <div class="card-body">
-                            <form>
+                            <form method="post" action="/patient_book_appointment.html" onsubmit="return validate()" >
                                 <div class="row">
                                     <div class="col-4 mb-4">
                                         <select id="doc_choose" class="custom-select">
@@ -175,6 +175,11 @@
                                 </div>                     
                                 
                                 <label>Choose Date</label>
+								
+								<input id="slot" name="slot" type="hidden">
+								<input id="docid" name="docid" type="hidden">
+								<input id="date" name="date" type="hidden">
+								<input id="p_name" name="p_name" type="hidden">
 
                                 <div class="row">
                                     
@@ -193,15 +198,14 @@
                                 </div>
           
                                 <hr>
-    
-                                <a id="book_btn" href="#" class="btn btn-primary btn-icon-split">
-                                    <span class="icon text-white-50">
-                                        <i class="fas fa-check"></i>
-                                    </span>
-                                    <span class="text">Book Appointment</span>
-                                </a>
+								<button type="submit" id="book_btn" class="btn btn-primary btn-icon-split">
+									<span class="icon text-white-50">
+										<i class="fas fa-check"></i>
+									</span>
+									<span class="text">Book Appointment</span>
+								</button>
 								<span id="message_span" style="color:red;padding:5px;">{{message}}</span>
-                            </form> 
+                            </form>
                         </div>
                     </div>
 
@@ -265,12 +269,34 @@
 	
 	<script>
 		var doctor_slots = [];
+		function validate() {
+			var selected_doc = $('#doc_choose').find('option:selected');
+			var selected_slot = $('#slot_select').find('option:selected');
+			var selected_date = $('#date_select').val();
+			if(selected_doc.val() == -1) {
+				$('#message_span').text('Please select a doctor.');
+				return false;
+			}
+			if(selected_slot.val() == -1) {
+				$('#message_span').text('Please select a slot.');
+				return false;
+			}
+			if(selected_date.length == 0) {
+				$('#message_span').text('Please select a valid date.');
+				return false;
+			}
+			$('#slot').val(selected_slot.val());
+			$('#docid').val(selected_doc.val());
+			$('#date').val(selected_date);
+			$('#p_name').val('{{p_name}}');
+			return true;
+		}
 		$(document).ready(function() {
 			doctor_slots = $('#slot_select>option').map(function() { return [$(this).val(), $(this).text()]; });
-			$('#slot_select').empty().append('<option selected value="-1">Choose a doctor</option>');
+			$('#slot_select').empty().append('<option selected value="-1">Choose a slot</option>');
 			$('#doc_choose').on('change', function() {
 				var selected_option = $(this).find('option:selected');
-				$('#slot_select').empty().append('<option selected value="-1">Choose a doctor</option>');
+				$('#slot_select').empty().append('<option selected value="-1">Choose a slot</option>');
 				if(parseInt(selected_option.val(), 10) >= 0) {
 					for(let i = 0; i < doctor_slots.length; i+=2) {
 						if(doctor_slots[i] == selected_option.val()) {
@@ -299,24 +325,6 @@
 							}
 						}
 					}
-				}
-			});
-			$('#book_btn').on('click', function() {
-				var selected_doc = $('#doc_choose').find('option:selected');
-				var selected_slot = $('#slot_select').find('option:selected');
-				var selected_date = $('#date_select').val();
-				if(selected_doc.val() == -1) $('#message_span').text('Please select a doctor.');
-				else if(selected_slot.val() == -1) $('#message_span').text('Please select a slot.');
-				else if(selected_date.length == 0)$('#message_span').text('Please select a valid date.');
-				else {
-					var url = "/patient_book_appointment.html";
-					var params = "slot="+selected_slot.val()+"&docid="+selected_doc.val()+"&date="+selected_date+"&p_name={{p_name}}";
-					var xhr = new XMLHttpRequest();
-					xhr.open("POST", url, true);
-
-					xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-					xhr.send(params);
 				}
 			});
 		});

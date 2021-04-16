@@ -1,5 +1,6 @@
-from flask import Flask, request, render_template, json
+from flask import Flask,Response, request, render_template, json
 import os
+from fpdf import FPDF
 from database_connection import *
 app = Flask(__name__)
 login = {}
@@ -78,13 +79,12 @@ def manage_pharmacy():
         execute_query('update expense set item_name = "' + form['item_name'] + '", qty = ' + form['qty'] + ', price = ' + form['price'] + ' where item_id = ' + form['itemid'])
     return render_template("admin_manage_pharmacy.html", pharmacy=disp("select item_id, item_name, qty, price from expense"))
 
-<<<<<<< HEAD
 @app.route('/patient_shop.html', methods=['POST'])
 def add_to_cart():
     form = request.form
     new_transaction(login[request.remote_addr][1:], form['itemid'], form['quantity'])
-    return render_template('patient_shop.html', p_name=p_name, items=disp("select item_id, item_name, qty, price from expense"), message='Item added to cart')
-=======
+    return render_patient_shop(form['p_name'], 'Item added to cart')
+
 @app.route('/patient_book_appointment.html', methods=['POST'])
 def book_appointment():
     form = request.form
@@ -93,10 +93,19 @@ def book_appointment():
     new_transaction(p_id, item_id, 1)
     execute_query('insert into appointment values(' + p_id +', ' + form['docid'] + ', ' + '"'+ form['date'] +'", ' + form['slot'] + ');')
     return render_template('patient_book_appointment.html', p_name=form['p_name'], doctor_names=disp('select doc_id, concat(first_name, " ", last_name) from doctor;'), doctor_slots=disp('select doc_id,timeslot from doctor;'), message="Appointment booked.")
->>>>>>> dd7310c (stuck on absence of transaction id)
     
 def new_transaction(p_id, item_id, qty_bought):
-    execute_query('insert into transact values(' + str(p_id) + ',' + str(item_id) + ',0,' + str(qty_bought) +')')
+    transaction_number = disp('select max(transact_id) from transact')[0][0]
+    if transaction_number == None:
+        transaction_number = 0
+    execute_query('insert into transact values(' + str(transaction_number+1) + ', ' + str(p_id) + ',' + str(item_id) + ',0,' + str(qty_bought) +', NULL)')
+
+def render_patient_shop(p_name, message):
+    items=disp('select item_id, item_name, qty, price from expense where not item_name="consultation"')
+    items_json = {}
+    for item in items:
+        items_json[item[0]] = [item[1], item[2], item[3]]
+    return render_template('patient_shop.html', p_name=p_name, items=items, message=message, items_json=items_json)
 
 @app.route('/<page_type>', methods=['GET'])
 def page(page_type):
@@ -122,7 +131,7 @@ def page(page_type):
             elif(page_type == 'patient_home.html'):
                 return render_template(page_type, p_name=p_name)
             elif(page_type == 'patient_shop.html'):
-                return render_template(page_type, p_name=p_name, items=disp("select item_id, item_name, qty, price from expense"), message="")
+                return render_patient_shop(p_name, "")
             elif(page_type == 'patient_shop_cart.html'):
                 return render_template(page_type, p_name=p_name) 
             elif(page_type == 'patient_transaction_history.html'):
@@ -141,6 +150,55 @@ def page(page_type):
         if(page_type == "home.html"):
             del login[request.remote_addr]
         return render_template(page_type)
+
+@app.route('/admin_report/download')
+def download_report():
+        return (get_pdf())
+    
+    
+def get_pdf(report = "expense"):
+    try:
+        get_header = disp("desc " + report)
+        heads = []
+        for tup in get_header:
+            heads.append(tup[0])
+            
+        result = disp("select * from " + report)
+        pdf = FPDF()
+        pdf.add_page()
+
+        page_width = pdf.w - 2 * pdf.l_margin 
+
+        pdf.set_font('Times','B',24.0) 
+        pdf.cell(page_width, 0.0, 'Item Data', align='C')
+        pdf.ln(10)
+
+        col_width = page_width/4
+
+        pdf.ln(1)
+
+        th = pdf.font_size
+        
+        for head in heads:
+            pdf.set_font('Times', 'B', 14.0)
+            pdf.cell(col_width, 2*th, head, border=1)
+        pdf.ln(2*th) 
+        
+        pdf.set_font('Courier', '', 12)
+        for row in result:
+            for el in row:
+                pdf.cell(col_width, th, str(el), border=1)
+            pdf.ln(th)
+        
+        pdf.ln(10)
+
+        pdf.set_font('Times','',10.0) 
+        pdf.cell(page_width, 0.0, '- end of report -', align='C')
+        return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=Expense_report.pdf'})    
+    except Exception as e:
+        print(e)
+
+
 
 if __name__ == '__main__':
     init()

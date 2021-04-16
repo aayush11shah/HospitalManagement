@@ -161,7 +161,7 @@
                             <h6 class="m-0 font-weight-bold text-primary">Choose Item to Buy</h6>
                         </div>
                         <div class="card-body">
-                            <form> 
+                            <form method="post" action="/patient_shop.html" onsubmit="return validate()" > 
                                 <div class="row">
                                     <div class="col-4 mb-4">
                                         <select id="item_select" class="custom-select">
@@ -181,15 +181,19 @@
                                 </div>
                                 
                                 <hr>
+								
+								<input type="hidden" name="itemid" id="itemid">
+								<input type="hidden" name="quantity" id="quantity">
+								<input type="hidden" name="p_name" id="p_name">
     
                                 <div class="row">
                                     <div class="col">
-                                        <a id="buy_btn" href="#" class="btn btn-primary btn-icon-split">
+                                        <button type="submit" id="buy_btn" href="#" class="btn btn-primary btn-icon-split">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-cart-plus"></i>
                                             </span>
                                             <span class="text">Add To Cart</span>
-                                        </a>
+                                        </button>
 										<span id="message_span" style="color:red;padding:5px;">{{message}}</span>
                                     </div>
                                 </div>
@@ -266,34 +270,30 @@
     <script src="../static/js/sb-admin-2.min.js"></script>
 	
 	<script>
+		var items = [];
+		function validate() {
+			var itemid = $('#item_select').find('option:selected').val();
+			var selected_item = items[itemid];
+			if(selected_item === undefined) {
+				$('#message_span').text('Please select an item.');
+				return false;
+			}
+			var quantity = $('#item_quantity').val();
+			if(quantity > selected_item[1]) {
+				$('#message_span').text('Not enough quantity.');
+				return false;
+			}
+			if(quantity <= 0) {
+				$('#message_span').text('Invalid quantity.');
+				return false;
+			}
+			$('#itemid').val(itemid);
+			$('#quantity').val(quantity);
+			$('#p_name').val('{{p_name}}')
+			return true;
+		}
 		$(document).ready(function() {
-			$('#buy_btn').on('click', function() {
-				var selected_item = $('#item_select').find('option:selected');
-				for(let i = 0; i < items.length; i++) {
-					if(items[i][0] == selected_item.val()) {
-						var quantity = $('#item_quantity').val();
-						if(quantity > items[i][2]) {
-							$('#message_span').text('Not enough quantity.');
-						}
-						else {
-<<<<<<< HEAD
-							var url = "/patient_shop.html";
-							var params = "itemid="items[i][0]+"&quantity="+quantity;
-							var xhr = new XMLHttpRequest();
-							xhr.open("POST", url, true);
-
-							//Send the proper header information along with the request
-							xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-							xhr.send(params);
-=======
-							
->>>>>>> dd7310c (stuck on absence of transaction id)
-						}
-						break;
-					}
-				}
-			});
+			items = JSON.parse('{{ items_json | tojson | safe}}');
 		});
 	</script>
 
