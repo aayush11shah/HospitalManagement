@@ -13,10 +13,11 @@ def disp(query):
     return Connector.disp(conn, query)
     
 def init():    
-    check = disp("SHOW DATABASES LIKE 'hospital'")
+    conn = create_db_connection("localhost", username, password)
+    check = Connector.disp(conn,"SHOW DATABASES LIKE 'hospital'")
     if len(check) == 0:    
-        create_database(conn, "hospital")
-        execute_query("use hospital")
+        Connector.create_database(conn, "hospital")
+        Connector.execute_query(conn,"use hospital")
         maketables(conn)
         relate(conn)
         print("Hospital database created")

@@ -50,10 +50,11 @@ CREATE TABLE expense (
 
 create_transact_table = """
 CREATE TABLE transact (
-	p_id INT PRIMARY KEY,
-	item_id INT UNIQUE,
+	p_id INT ,
+	item_id INT ,
 	pay_status INT,
-	qty_bought INT
+	qty_bought INT,
+	primary key (p_id, item_id)
 );
 """
 
@@ -83,9 +84,10 @@ CREATE TABLE job (
 create_appointment_table = """
 CREATE TABLE appointment (
 	p_id INT ,
-	doc_id INT PRIMARY KEY,
+	doc_id INT ,
 	start_date DATE,
-	time INT
+	time INT,
+	primary key (p_id, doc_id)
 );
 """
 
