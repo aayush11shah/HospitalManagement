@@ -315,6 +315,7 @@
 	
 	<script>
 		var doctor_slots = [];
+		var appointments;
 		function validate() {
 			var selected_doc = $('#doc_choose').find('option:selected');
 			var selected_slot = $('#slot_select').find('option:selected');
@@ -355,7 +356,13 @@
 			$('#date_select').on('change', function() {
 				refreshSlots(dtToday, $(this).val(), $('#doc_choose').find('option:selected'))
 			});
+			appointments = JSON.parse('{{ appointments_json | tojson | safe}}');
 		});
+		
+		function doctor_is_busy(doctor_id, date, timeslot) {
+			return appointments.hasOwnProperty(doctor_id) && appointments[doctor_id].hasOwnProperty(date) && appointments[doctor_id][date].lastIndexOf(timeslot) != -1;
+		}
+			
 		
 		function refreshSlots(dtToday, date, selected_doctor) {
 			$('#slot_select').empty().append('<option selected value="-1">Choose a slot</option>');
@@ -367,6 +374,7 @@
 								var start_hour = Math.floor(9 + j/2);
 								var start_min = (j%2)*30;
 								
+								if(doctor_is_busy(selected_doctor.val(), $('#date_select').val(),j)) continue;
 								if($('#date_select').val() == dtToday.toISOString().substr(0, dtToday.toISOString().indexOf('T'))) {
 									if(start_hour < dtToday.getHours() || (start_hour==dtToday.getHours() && start_min < dtToday.getMinutes())) continue;
 								}

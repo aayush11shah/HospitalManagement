@@ -92,8 +92,8 @@ def book_appointment():
     item_id = str(disp('select item_id from expense where item_name="consultation"')[0][0])
     new_transaction(p_id, item_id, 1)
     execute_query('insert into appointment values(' + p_id +', ' + form['docid'] + ', ' + '"'+ form['date'] +'", ' + form['slot'] + ');')
-    return render_template('patient_book_appointment.html', p_name=form['p_name'], doctor_names=disp('select doc_id, concat(first_name, " ", last_name) from doctor;'), doctor_slots=disp('select doc_id,timeslot from doctor;'), message="Appointment booked.")
-    
+    return render_patient_book_appointment(form['p_name'], 'Appointment booked.')
+       
 def new_transaction(p_id, item_id, qty_bought):
     transaction_number = disp('select max(transact_id) from transact')[0][0]
     if transaction_number == None:
@@ -126,7 +126,7 @@ def page(page_type):
             patient_data = disp("select * from patient where p_id = " + m_status[1:])[0]
             p_name = str(patient_data[2])
             if(page_type == 'patient_book_appointment.html'):
-                return render_template(page_type, p_name=p_name, doctor_names=disp('select doc_id, concat(first_name, " ", last_name) from doctor;'), doctor_slots=disp('select doc_id,timeslot from doctor;'), message="")
+                return render_patient_book_appointment(p_name, "")
             elif(page_type == 'patient_book_room.html'):
                 return render_template(page_type, p_name=p_name)
             elif(page_type == 'patient_home.html'):
@@ -155,9 +155,24 @@ def page(page_type):
 def admin_manage_doctors():
     return render_template('admin_manage_doctors.html', doctor_table=disp("select doc_id, first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor"), departments=disp('select dept_id, dept_name from department')) 
 
+def render_patient_book_appointment(p_name, message):
+    appointments_json = {}
+    current_appointments = disp('select doc_id, start_date, time from appointment')
+    for appointment in current_appointments:
+        if appointment[0] not in appointments_json.keys():
+           appointments_json[appointment[0]] = {}
+        if appointment[1] == "NULL":
+            appointments_json[appointment[0]]['room'] = appointment[2]
+        else:
+            date_str = appointment[1].strftime("%Y-%m-%d")
+            if date_str not in appointments_json[appointment[0]].keys():
+                appointments_json[appointment[0]][date_str] = []
+            appointments_json[appointment[0]][date_str].append(appointment[2])
+    return render_template('patient_book_appointment.html', p_name=p_name, doctor_names=disp('select doc_id, concat(first_name, " ", last_name) from doctor;'), doctor_slots=disp('select doc_id,timeslot from doctor;'), message=message, appointments_json=appointments_json)
+
 @app.route('/admin_report/download')
 def download_report():
-        return (get_pdf())
+    return (get_pdf())
     
     
 def get_pdf(report = "expense"):
