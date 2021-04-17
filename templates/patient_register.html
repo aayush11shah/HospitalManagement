@@ -62,7 +62,13 @@
 
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input name="gender" type="text" class="form-control form-control-user" id="gender" aria-labelledby="exampleInputPassword" placeholder="Gender">
+                                        <input type="hidden" name="gender" type="text">
+										<select class="custom-select" id="gender_select" name="gender_select">
+											<option selected value="-1">Choose a gender</option>
+											<option value="0">M</option>
+											<option value="1">F</option>
+											<option value="2">Other</option>
+										</select>
                                     </div>
                                     <div class="col-sm-6">
                                         <input name ="ph_no" type="text" class="form-control form-control-user" id="ph_no" aria-labelledby="exampleRepeatPassword" placeholder="Phone Number">
@@ -128,7 +134,7 @@
 
             var age = document.getElementById("age").value;
 
-            var gender = document.getElementById("gender").value;
+            var gender = document.getElementById("gender_select").getElementsByTagName("option")[document.getElementById("gender_select").selectedIndex].text;
 
             var phone = document.getElementById("ph_no").value;
 
@@ -138,7 +144,7 @@
             
 
         // Conditions
-            if (fname != '' && lname != '' &&  pwd != '' && repPwd != '' && bloodgrp!='' && age!='' && gender!='' && phone!='' && address!='' && adhar_id!=''  ) {
+            if (fname != '' && lname != '' &&  pwd != '' && repPwd != '' && bloodgrp!='' && age!='' && gender!='Choose a gender' && phone!='' && address!='' && adhar_id!=''  ) {
                 if(pwd == repPwd){
                     alert("Please take note of your USER ID and PASSWORD before pressing OK.");
                     return true;
@@ -153,6 +159,7 @@
                 return false;
             }
         }
+		
     </script>
 
 </body>

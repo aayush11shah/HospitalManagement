@@ -10,12 +10,19 @@ ON DELETE SET NULL;
 
 alter_doctor = """
 ALTER TABLE doctor
+auto_increment = 100,
+
 ADD FOREIGN KEY(dept_id)
 REFERENCES department(dept_id)
 ON DELETE SET NULL;
 """
 
 ### There is no dependency for Patient table 
+alter_patient = """
+ALTER TABLE patient
+auto_increment = 1000;
+"""
+
 
 ### There is no dependency for Expense table 
 
@@ -59,9 +66,9 @@ REFERENCES doctor(doc_id);
 #   FOREIGN KEY(course_id) REFERENCES course(course_id) ON DELETE CASCADE
 
 def relate(connection):
-	execute_query(connection, alter_dept)
+	# execute_query(connection, alter_dept)
 	execute_query(connection, alter_doctor)
-	# execute_query(connection, alter_patient)
+	execute_query(connection, alter_patient)
 	# execute_query(connection, alter_expense)
 	execute_query(connection, alter_transact)
 	execute_query(connection, alter_room)

@@ -63,10 +63,10 @@ def manage_doctor():
     if "action" in form.keys() and form["action"] == "delete":
         execute_query("delete from doctor where doc_id = " +form["docid"])
     elif "pass" in form.keys():
-        execute_query("insert into doctor values (" + form['docid'] + ",'" + form['pass'] + "','" + form['fname'] + "','" +  form['lname'] + "'," + form['adhar_id'] + ",'" + form['chamber'] + "',"+form['salary']+"," + form['dept'] +",'"+form['timeslot'] + "')")
+        execute_query("insert into doctor values (" + form['docid'] + ",'" + form['pass'] + "','" + form['fname'] + "','" +  form['lname'] + "'," + form['adhar_id'] + ",'" + form['chamber'] + "',"+form['salary']+"," + form['add_dept_id'] +",'"+form['timeslot'] + "')")
     else:
-        execute_query('update doctor set first_name = "' + form['fname'] + '", last_name = "' + form['lname'] + '", aadhar_id = ' + form['adhar_id'] + ', chamber = "' + form['chamber'] + '", salary = ' + form['salary'] + ', timeslot = "' + form['timeslot'] + '" where doc_id = ' + form['docid'])
-    return render_template("admin_manage_doctors.html", doctor_table=disp("select doc_id, first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor"))
+        execute_query('update doctor set first_name = "' + form['fname'] + '", last_name = "' + form['lname'] + '", aadhar_id = ' + form['adhar_id'] + ', chamber = "' + form['chamber'] + '", salary = ' + form['salary'] + ', timeslot = "' + form['timeslot'] + '", dept_id=' + form['edit_dept_id'] +' where doc_id = ' + form['docid'])
+    return admin_manage_doctors()
 
 @app.route('/admin_manage_pharmacy.html', methods=['POST'])
 def manage_pharmacy():
@@ -115,7 +115,7 @@ def page(page_type):
     if(request.remote_addr in login.keys()):
         if(login[request.remote_addr] == 'a'):
             if(page_type == 'admin_manage_doctors.html'):
-                return render_template(page_type, doctor_table=disp("select doc_id, first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor"))
+                return admin_manage_doctors()
             elif(page_type == 'admin_manage_patients.html'):
                 return render_template(page_type, patient_table=disp("select p_id, p_name, blood_grp, age, gender, ph_no, address, aadhar_id, p_history from patient"))
             elif(page_type == 'admin_manage_pharmacy.html'):
@@ -151,6 +151,9 @@ def page(page_type):
         if(page_type == "home.html"):
             del login[request.remote_addr]
         return render_template(page_type)
+
+def admin_manage_doctors():
+    return render_template('admin_manage_doctors.html', doctor_table=disp("select doc_id, first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor"), departments=disp('select dept_id, dept_name from department')) 
 
 @app.route('/admin_report/download')
 def download_report():

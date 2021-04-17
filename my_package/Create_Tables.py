@@ -2,7 +2,7 @@ from .Connector import execute_query
 
 create_deptartment_table = """
 CREATE TABLE department (
-	dept_id INT PRIMARY KEY,
+	dept_id INT PRIMARY KEY AUTO_INCREMENT,
 	dept_name VARCHAR(40) NOT NULL,
 	available_docs INT,
 	total_docs INT,
@@ -12,7 +12,7 @@ CREATE TABLE department (
 
 create_doctor_table = """
 CREATE TABLE doctor (
-	doc_id INT PRIMARY KEY,
+	doc_id INT PRIMARY KEY AUTO_INCREMENT,
 	Password VARCHAR(40),
 	first_name VARCHAR(40) NOT NULL,
 	last_name VARCHAR(40) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE doctor (
 
 create_patient_table = """
 CREATE TABLE patient (
-	p_id INT PRIMARY KEY,
+	p_id INT PRIMARY KEY AUTO_INCREMENT,
 	Password VARCHAR(40) NOT NULL,
 	p_name VARCHAR(40) NOT NULL,
 	blood_grp VARCHAR(3),
@@ -99,7 +99,7 @@ CREATE TABLE appointment (
 	doc_id INT ,
 	start_date DATE,
 	time INT,
-	primary key (Doc_id, DATE, TIME)
+	primary key (Doc_id, start_date, time)
 );
 """
 

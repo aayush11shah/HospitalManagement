@@ -282,7 +282,7 @@
                     </button>
                 </div>
 				<div class="modal-body">
-					<form id="edit_doctor_form" action="/admin_manage_doctors.html" method="post" class="user" onsubmit="return validateDoctor()">
+					<form id="edit_doctor_form" action="/admin_manage_doctors.html" method="post" class="user" onsubmit="return validateEditDoctor()">
 						<div class="form-group row">
 							<div class="col-sm-6 mb-3 mb-sm-0">
 								<input name="fname" type="text" class="form-control form-control-user" id="fname" aria-labelledby="exampleFirstName" placeholder="First Name">
@@ -307,7 +307,18 @@
 								<input name="timeslot" type="number" class="form-control form-control-user" id="timeslot" aria-labelledby="timeslots" placeholder="Timeslots">
 							</div>
 						</div>
+						<div class="form-group row">
+							<div class="col-sm-6 mb-3 mb-sm-0">
+								<select name="department" class="custom-select" id="department_select">
+									{% for department in departments %}
+										<option value="{{department[0]}}"> {{department[1]}}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
 						<input type="hidden" name="docid" id="docid">
+						<input type="hidden" name="edit_dept_id" id="edit_dept_id">
+						<span id="message_span" style="color:red;padding:5px;"></span>
 					</form>
 				</div>
 				<div class="modal-footer">
@@ -329,7 +340,7 @@
                     </button>
                 </div>
 				<div class="modal-body">
-					<form name="add_doctor_form" id="add_doctor_form" action="/admin_manage_doctors.html" method="post" class="user" onsubmit="return validateDoctor()">
+					<form name="add_doctor_form" id="add_doctor_form" action="/admin_manage_doctors.html" method="post" class="user" onsubmit="return validateAddDoctor()">
 						<div class="form-group row">
 							<div class="col-sm-6 mb-3 mb-sm-0">
 								<input name="docid" type="text" class="form-control form-control-user" id="docid" aria-labelledby="docid" placeholder="Doctor Id">
@@ -348,8 +359,16 @@
 						</div>
                         <div class="form-group row">
 							<div class="col-sm-6 mb-3 mb-sm-0">
-								<input name="dept" type="number" class="form-control form-control-user" id="dept" aria-labelledby="exampleFirstName" placeholder="department">
+								<input name="dept" type="hidden" class="form-control form-control-user" id="dept" aria-labelledby="exampleFirstName" placeholder="department">
+								<select name="department" class="custom-select" id="dept_select">
+									<option value="-1" selected>Select a Department</option>
+									{% for department in departments %}
+										<option value="{{department[0]}}"> {{department[1]}}</option>
+									{% endfor %}
+								</select>
                             </div>
+							<input id="add_dept_id" name="add_dept_id" type="hidden">
+							<span id="message_span" style="color:red;padding:5px;"></span>
 						</div>
 						<div class="form-group row">
 							<div class="col-sm-6">
@@ -367,11 +386,9 @@
 								<input name="timeslot" type="number" class="form-control form-control-user" id="timeslot" aria-labelledby="timeslots" placeholder="Timeslots">
 							</div>
 						</div>
+						<button type="submit" class="btn btn-secondary">Save</button>
 					</form>
 				</div>
-				<div class="modal-footer">
-                    <button type="submit" form="add_doctor_form" class="btn btn-secondary">Save</button>
-                </div>
             </div>
         </div>
     </div>
@@ -394,8 +411,34 @@
         <script src="../static/js/demo/datatables-demo.js"></script>
 		
 		<script>
-			function validateDoctor() {
-				console.log("lol");
+			function validateEditDoctor() {
+				var selectedVal = $('#department_select').find('option:selected').val();
+				$('#edit_dept_id').val(selectedVal);
+				return commonValidation($('#edit_doctor_form'));
+			}
+			
+			function validateAddDoctor() {
+				var selectedVal = $('#dept_select').find('option:selected').val();
+				if(selectedVal == '-1') {
+					$('#message_span').text('Please choose a department.');
+					return false;
+				}
+				$('#add_dept_id').val(selectedVal);
+				return commonValidation($('#add_doctor_form'));
+			}
+			
+			function commonValidation(form) {
+				timeslot = form.find('#timeslot');
+				if(timeslot.val().length != 18) {
+					form.find('#message_span').text('Timeslot should be 18 characters long.');
+					return false;
+				}
+				for(let i = 0; i < 18; i++) {
+					if(timeslot.val()[i] != '0' && timeslot.val()[i] != '1') {
+						form.find('#message_span').text('Timeslot should only contain 0s and 1s.');
+						return false;
+					}
+				}
 				return true;
 			}
 			
@@ -422,9 +465,8 @@
 					$("#lname").val(currentRow.find("td:eq(2)").text().trim());
 					$("#adhar_id").val(currentRow.find("td:eq(3)").text().trim());
 					$("#chamber").val(currentRow.find("td:eq(4)").text().trim());
-					console.log(currentRow.find("td:eq(5)").text().trim());
-					console.log(currentRow.find("td:eq(7)").text().trim());
 					$("#salary").val(currentRow.find("td:eq(5)").text().trim());
+					$("#department_select").val(currentRow.find("td:eq(6)").text().trim())
 					$("#timeslot").val(currentRow.find("td:eq(7)").text().trim());
 				});
                  
