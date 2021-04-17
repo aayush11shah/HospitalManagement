@@ -13,7 +13,7 @@ def homepage():
 def register_patient():
     form = request.form
     if request.method == 'POST':
-        pid = 0 # disp("select count(*) from patient")[0][0]
+        pid = 0 #incr()+1 # disp("select count(*) from patient")[0][0]
         password = form['pass']
         p_name = form['fname'] + " " + form['lname']
         blood_grp = form['blood_grp']
@@ -63,7 +63,7 @@ def manage_doctor():
     if "action" in form.keys() and form["action"] == "delete":
         execute_query("delete from doctor where doc_id = " +form["docid"])
     elif "pass" in form.keys():
-        execute_query("insert into doctor values (" + form['docid'] + ",'" + form['pass'] + "','" + form['fname'] + "','" +  form['lname'] + "'," + form['adhar_id'] + ",'" + form['chamber'] + "',"+form['salary']+"," + form['add_dept_id'] +",'"+form['timeslot'] + "')")
+        execute_query("insert into doctor values (" + '0' + ",'" + form['pass'] + "','" + form['fname'] + "','" +  form['lname'] + "'," + form['adhar_id'] + ",'" + form['chamber'] + "',"+form['salary']+"," + form['add_dept_id'] +",'"+form['timeslot'] + "')")
     else:
         execute_query('update doctor set first_name = "' + form['fname'] + '", last_name = "' + form['lname'] + '", aadhar_id = ' + form['adhar_id'] + ', chamber = "' + form['chamber'] + '", salary = ' + form['salary'] + ', timeslot = "' + form['timeslot'] + '", dept_id=' + form['edit_dept_id'] +' where doc_id = ' + form['docid'])
     return admin_manage_doctors()
@@ -110,7 +110,7 @@ def render_patient_shop(p_name, message):
 @app.route('/<page_type>', methods=['GET'])
 def page(page_type):
     if(page_type == "patient_register.html"):
-        userid = str(disp("select count(*) from patient")[0][0] + 1000)
+        userid = disp("select MAX(P_ID) from patient")[0][0] + 1
         return render_template(page_type, value=userid)
     if(request.remote_addr in login.keys()):
         if(login[request.remote_addr] == 'a'):
@@ -216,7 +216,6 @@ def get_pdf(report = "expense"):
         return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=Expense_report.pdf'})    
     except Exception as e:
         print(e)
-
 
 
 if __name__ == '__main__':

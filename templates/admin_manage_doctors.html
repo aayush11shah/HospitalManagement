@@ -334,7 +334,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Doctor Information</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Add a new Doctor </h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -342,10 +342,18 @@
 				<div class="modal-body">
 					<form name="add_doctor_form" id="add_doctor_form" action="/admin_manage_doctors.html" method="post" class="user" onsubmit="return validateAddDoctor()">
 						<div class="form-group row">
+								<input name="docid" type="hidden" class="form-control form-control-user" id="docid" aria-labelledby="docid" placeholder="Doctor Id">
 							<div class="col-sm-6 mb-3 mb-sm-0">
-								<input name="docid" type="text" class="form-control form-control-user" id="docid" aria-labelledby="docid" placeholder="Doctor Id">
-							</div>
-							<div class="col-sm-6">
+								<input name="dept" type="hidden" class="form-control form-control-user" id="dept" aria-labelledby="exampleFirstName" placeholder="department">
+								<select name="department" class="custom-select" id="dept_select">
+									<option value="-1" selected>Select a Department</option>
+									{% for department in departments %}
+										<option value="{{department[0]}}"> {{department[1]}}</option>
+									{% endfor %}
+								</select>
+                            </div>
+							<input id="add_dept_id" name="add_dept_id" type="hidden">
+                            <div class="col-sm-6">
 								<input name="pass" type="text" class="form-control form-control-user" id="pass" aria-labelledby="pass" placeholder="Password">
 							</div>
 						</div>
@@ -357,19 +365,9 @@
 								<input name="lname" type="text" class="form-control form-control-user" id="lname" aria-labelledby="exampleLastName" placeholder="Last Name">
 							</div>
 						</div>
-                        <div class="form-group row">
-							<div class="col-sm-6 mb-3 mb-sm-0">
-								<input name="dept" type="hidden" class="form-control form-control-user" id="dept" aria-labelledby="exampleFirstName" placeholder="department">
-								<select name="department" class="custom-select" id="dept_select">
-									<option value="-1" selected>Select a Department</option>
-									{% for department in departments %}
-										<option value="{{department[0]}}"> {{department[1]}}</option>
-									{% endfor %}
-								</select>
-                            </div>
-							<input id="add_dept_id" name="add_dept_id" type="hidden">
-							<span id="message_span" style="color:red;padding:5px;"></span>
-						</div>
+                        <!-- <div class="form-group row">
+							
+						</div> -->
 						<div class="form-group row">
 							<div class="col-sm-6">
 								<input name="adhar_id" type="text" class="form-control form-control-user" id="adhar_id" aria-labelledby="adhar_id" placeholder="AadhAr ID">
@@ -387,6 +385,7 @@
 							</div>
 						</div>
 						<button type="submit" class="btn btn-secondary">Save</button>
+                        <span id="message_span" style="color:red;padding:5px;"></span>
 					</form>
 				</div>
             </div>
