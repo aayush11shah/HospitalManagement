@@ -143,7 +143,7 @@ def page(page_type):
             doctor_data = disp("select * from doctor where doc_id = " + m_status[1:])[0]
             d_name = doctor_data[2] + " " + doctor_data[3]
             if(page_type == 'doctor_appointments.html'):
-                return render_template(page_type, d_name=d_name)
+                return render_doctor_appointment(d_name)
             elif(page_type == 'doctor_home.html'):
                 return render_template(page_type, d_name=d_name,doctor_data= doctor_data[4:])
             return render_template(page_type)
@@ -169,6 +169,24 @@ def render_patient_book_appointment(p_name, message):
                 appointments_json[appointment[0]][date_str] = []
             appointments_json[appointment[0]][date_str].append(appointment[2])
     return render_template('patient_book_appointment.html', p_name=p_name, doctor_names=disp('select doc_id, concat(first_name, " ", last_name) from doctor;'), doctor_slots=disp('select doc_id,timeslot from doctor;'), message=message, appointments_json=appointments_json)
+
+def render_doctor_appointment(d_name):
+    appointments_json = {}
+    m_status = login[request.remote_addr]
+    current_appointments = disp('select p_id, start_date, time from appointment where doc_id = ' + m_status[1:])
+    chamber = disp('select chamber from doctor where doc_id = ' + m_status[1:])[0][0]
+    i = 0
+    for appointment in current_appointments:
+        patient_data = disp('select p_name, p_history from patient where p_id = ' + str(appointment[0]))[0]
+        location = ""
+        if appointment[1] != "NULL":
+            location = chamber
+        else:
+            location = disp('select room_id from room where p_id = ' + appointment[0])[0][0]
+        appointments_json[i] = [patient_data[0], int(appointment[2]), appointment[1], location, patient_data[1]]
+        i += 1        
+    
+    return render_template("doctor_appointments.html", d_name=d_name, appointments_json=appointments_json)
 
 @app.route('/admin_report/download')
 def download_report():
