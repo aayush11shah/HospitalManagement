@@ -123,13 +123,14 @@ def page(page_type):
             return render_template(page_type)
         elif(login[request.remote_addr][0] == 'p'):
             m_status = login[request.remote_addr]
-            p_name = str(disp("select p_name from patient where p_id = " + m_status[1:])[0][0])
+            patient_data = disp("select p_name, blood_grp, age, gender, ph_no, address, aadhar_id from patient where p_id = " + m_status[1:])[0]
+            p_name = str(patient_data[0])
             if(page_type == 'patient_book_appointment.html'):
                 return render_template(page_type, p_name=p_name, doctor_names=disp('select doc_id, concat(first_name, " ", last_name) from doctor;'), doctor_slots=disp('select doc_id,timeslot from doctor;'), message="")
             elif(page_type == 'patient_book_room.html'):
-                return render_template(page_type, p_name=p_name)
+                return render_template(page_type, p_name=p_name, blood_grp=)
             elif(page_type == 'patient_home.html'):
-                return render_template(page_type, p_name=p_name)
+                return render_template(page_type, p_name=p_name , patient_data[1:])
             elif(page_type == 'patient_shop.html'):
                 return render_patient_shop(p_name, "")
             elif(page_type == 'patient_shop_cart.html'):
