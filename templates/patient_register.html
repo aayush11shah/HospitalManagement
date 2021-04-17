@@ -53,7 +53,18 @@
 
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input name="blood_grp" type="text" class="form-control form-control-user" id="blood_grp" aria-labelledby="exampleInputPassword" placeholder="Blood Group">
+										<select class="custom-select" id="blood_group_select" name="blood_group_select">
+											<option selected value="-1">Choose a blood group</option>
+											<option value="0">O-</option>
+											<option value="1">O+</option>
+											<option value="2">A-</option>
+											<option value="3">A+</option>
+											<option value="4">B-</option>
+											<option value="5">B+</option>
+											<option value="6">AB+</option>
+											<option value="7">AB-</option>
+										</select>
+                                        <input name="blood_grp" type="hidden" id="blood_grp">
                                     </div>
                                     <div class="col-sm-6">
                                         <input name="age" type="number" class="form-control form-control-user" id="age" aria-labelledby="exampleRepeatPassword" placeholder="Age">
@@ -130,7 +141,7 @@
 
             var repPwd = document.getElementById("password").value;
 
-            var bloodgrp = document.getElementById("blood_grp").value;
+            var bloodgrp = document.getElementById("blood_group_select").getElementsByTagName("option")[document.getElementById("blood_group_select").selectedIndex].text;
 
             var age = document.getElementById("age").value;
 
@@ -144,7 +155,7 @@
             
 
         // Conditions
-            if (fname != '' && lname != '' &&  pwd != '' && repPwd != '' && bloodgrp!='' && age!='' && gender!='Choose a gender' && phone!='' && address!='' && adhar_id!=''  ) {
+            if (fname != '' && lname != '' &&  pwd != '' && repPwd != '' && bloodgrp!='Choose a blood group' && age!='' && gender!='Choose a gender' && phone!='' && address!='' && adhar_id!=''  ) {
                 if(pwd == repPwd){
                     alert("Please take note of your USER ID and PASSWORD before pressing OK.");
                     return true;
