@@ -73,7 +73,7 @@
 
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="hidden" name="gender" type="text">
+                                        <input type="hidden" name="gender" id="gender" type="text">
 										<select class="custom-select" id="gender_select" name="gender_select">
 											<option selected value="-1">Choose a gender</option>
 											<option value="0">M</option>
@@ -156,14 +156,20 @@
 
         // Conditions
             if (fname != '' && lname != '' &&  pwd != '' && repPwd != '' && bloodgrp!='Choose a blood group' && age!='' && gender!='Choose a gender' && phone!='' && address!='' && adhar_id!=''  ) {
-                if(pwd == repPwd){
+                if(phone.length != 10) {
+					alert("Phone number has to be of length 10.");
+					return false;
+				}
+				if(pwd == repPwd){
+					document.getElementById("blood_grp").value = bloodgrp;
+					document.getElementById("gender").value = gender;
                     alert("Please take note of your USER ID and PASSWORD before pressing OK.");
                     return true;
                 }
                 else {
                     alert("Please repeat correct password");
                     return false;
-                } 
+                }
             } 
             else {
                 alert("All fields are required.....!");
