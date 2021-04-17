@@ -33,7 +33,7 @@ def login_doctor():
         doctor = disp("select * from doctor where doc_id=" + form['userid'] + " AND password='" + form['password'] + "';")
         if(len(doctor)):
             login[request.remote_addr] = 'd' + str(doctor[0][0])
-            return render_template("doctor_home.html")
+            return render_template("doctor_home.html", d_name= (doctor[0][2] + " " + doctor[0][3]),doctor_data= doctor[0][4:])
         return "Wrong password or username"
         
 @app.route('/admin_login', methods=['POST'])
@@ -54,7 +54,7 @@ def login_patient():
         patient = disp("select * from patient where p_id=" + form['userid'] + " AND password='" + form['password'] + "';")
         if(len(patient)):
             login[request.remote_addr] = 'p' + str(patient[0][0])
-            return render_template("patient_home.html", p_name=str(patient[0][2]))
+            return render_template("patient_home.html", p_name=str(patient[0][2]),patient_data=patient[0][3:])
         return "Wrong password or username"
 
 @app.route('/admin_manage_doctors.html', methods=['POST'])
@@ -123,14 +123,14 @@ def page(page_type):
             return render_template(page_type)
         elif(login[request.remote_addr][0] == 'p'):
             m_status = login[request.remote_addr]
-            patient_data = disp("select p_name, blood_grp, age, gender, ph_no, address, aadhar_id from patient where p_id = " + m_status[1:])[0]
-            p_name = str(patient_data[0][0])
+            patient_data = disp("select * from patient where p_id = " + m_status[1:])[0]
+            p_name = str(patient_data[2])
             if(page_type == 'patient_book_appointment.html'):
                 return render_template(page_type, p_name=p_name, doctor_names=disp('select doc_id, concat(first_name, " ", last_name) from doctor;'), doctor_slots=disp('select doc_id,timeslot from doctor;'), message="")
             elif(page_type == 'patient_book_room.html'):
-                return render_template(page_type, p_name=p_name, blood_grp=)
+                return render_template(page_type, p_name=p_name)
             elif(page_type == 'patient_home.html'):
-                return render_template(page_type, p_name=p_name , patient_data[0][1:])
+                return render_template(page_type, p_name=p_name ,patient_data= patient_data[3:])
             elif(page_type == 'patient_shop.html'):
                 return render_patient_shop(p_name, "")
             elif(page_type == 'patient_shop_cart.html'):
@@ -140,12 +140,12 @@ def page(page_type):
             return render_template(page_type)
         elif(login[request.remote_addr][0] == 'd'):
             m_status = login[request.remote_addr]
-            doctor_data = disp("select first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor where doc_id = " + m_status[1:])
-            d_name = doctor_data[0][0] + " " + doctor_data[0][1]
+            doctor_data = disp("select * from doctor where doc_id = " + m_status[1:])[0]
+            d_name = doctor_data[2] + " " + doctor_data[3]
             if(page_type == 'doctor_appointments.html'):
                 return render_template(page_type, d_name=d_name)
             elif(page_type == 'doctor_home.html'):
-                return render_template(page_type, d_name=d_name, doctor_data[0][2:])
+                return render_template(page_type, d_name=d_name,doctor_data= doctor_data[4:])
             return render_template(page_type)
     else:
         if(page_type == "home.html"):
