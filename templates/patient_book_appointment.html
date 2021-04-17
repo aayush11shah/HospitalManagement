@@ -340,40 +340,60 @@
 		$(document).ready(function() {
 			doctor_slots = $('#slot_select>option').map(function() { return [$(this).val(), $(this).text()]; });
 			$('#slot_select').empty().append('<option selected value="-1">Choose a slot</option>');
+			var dtToday = new Date();
+			var month = dtToday.getMonth() + 1;
+			var day = dtToday.getDate();
+			var year = dtToday.getFullYear();
+			if(month < 10)
+				month = '0' + month.toString();
+			if(day < 10)
+				day = '0' + day.toString();
+			$('#date_select').attr('min', year + '-' + month + '-' + day);
 			$('#doc_choose').on('change', function() {
-				var selected_option = $(this).find('option:selected');
-				$('#slot_select').empty().append('<option selected value="-1">Choose a slot</option>');
-				if(parseInt(selected_option.val(), 10) >= 0) {
-					for(let i = 0; i < doctor_slots.length; i+=2) {
-						if(doctor_slots[i] == selected_option.val()) {
-							for(let j = 0; j < doctor_slots[i+1].length; j++) {
-								if(doctor_slots[i+1][j] == '1') {
-									var start_hour = Math.floor(9 + j/2);
-									var start_min = (j%2)*30;
-									var ampm_start = "am";
-									if(start_hour > 12) {
-										start_hour -= 12;
-										ampm_start = "pm";
-									}
-									var end_hour = start_hour;
-									var end_min = start_min + 30;
-									if(end_min == 60) {
-										end_hour += 1;
-										end_min = 0;
-									}
-									var ampm_end = "am";
-									if(end_hour > 12) {
-										end_hour -= 12;
-										ampm_end = "pm";
-									}
-									$('#slot_select').append('<option value=' + j + '>' + Math.floor(start_hour/10) + (start_hour%10) + ':' + Math.floor(start_min/10) + (start_min%10) + ' ' + ampm_start + ' - ' + Math.floor(end_hour/10) + (end_hour%10) + ':' + Math.floor(end_min/10) + (end_min%10) + ' ' + ampm_end +'</option>');
+				refreshSlots(dtToday, $('#date_select').val(), $(this).find('option:selected'));
+			});
+			$('#date_select').on('change', function() {
+				refreshSlots(dtToday, $(this).val(), $('#doc_choose').find('option:selected'))
+			});
+		});
+		
+		function refreshSlots(dtToday, date, selected_doctor) {
+			$('#slot_select').empty().append('<option selected value="-1">Choose a slot</option>');
+			if(parseInt(selected_doctor.val(), 10) >= 0) {
+				for(let i = 0; i < doctor_slots.length; i+=2) {
+					if(doctor_slots[i] == selected_doctor.val()) {
+						for(let j = 0; j < doctor_slots[i+1].length; j++) {
+							if(doctor_slots[i+1][j] == '1') {
+								var start_hour = Math.floor(9 + j/2);
+								var start_min = (j%2)*30;
+								
+								if($('#date_select').val() == dtToday.toISOString().substr(0, dtToday.toISOString().indexOf('T'))) {
+									if(start_hour < dtToday.getHours() || (start_hour==dtToday.getHours() && start_min < dtToday.getMinutes())) continue;
 								}
+								
+								var ampm_start = "am";
+								if(start_hour > 12) {
+									start_hour -= 12;
+									ampm_start = "pm";
+								}
+								var end_hour = start_hour;
+								var end_min = start_min + 30;
+								if(end_min == 60) {
+									end_hour += 1;
+									end_min = 0;
+								}
+								var ampm_end = ampm_start;
+								if(end_hour > 12) {
+									end_hour -= 12;
+									ampm_end = "pm";
+								}
+								$('#slot_select').append('<option value=' + j + '>' + Math.floor(start_hour/10) + (start_hour%10) + ':' + Math.floor(start_min/10) + (start_min%10) + ' ' + ampm_start + ' - ' + Math.floor(end_hour/10) + (end_hour%10) + ':' + Math.floor(end_min/10) + (end_min%10) + ' ' + ampm_end +'</option>');
 							}
 						}
 					}
 				}
-			});
-		});
+			}
+		}
 	</script>
 
 </body>
