@@ -13,7 +13,7 @@ def homepage():
 def register_patient():
     form = request.form
     if request.method == 'POST':
-        pid = disp("select count(*) from patient")[0][0]
+        pid = 0 # disp("select count(*) from patient")[0][0]
         password = form['pass']
         p_name = form['fname'] + " " + form['lname']
         blood_grp = form['blood_grp']
@@ -110,7 +110,7 @@ def render_patient_shop(p_name, message):
 @app.route('/<page_type>', methods=['GET'])
 def page(page_type):
     if(page_type == "patient_register.html"):
-        userid = str(disp("select count(*) from patient")[0][0])
+        userid = str(disp("select count(*) from patient")[0][0] + 1000)
         return render_template(page_type, value=userid)
     if(request.remote_addr in login.keys()):
         if(login[request.remote_addr] == 'a'):
