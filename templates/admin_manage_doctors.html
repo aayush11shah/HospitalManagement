@@ -318,6 +318,7 @@
 						</div>
 						<input type="hidden" name="docid" id="docid">
 						<input type="hidden" name="edit_dept_id" id="edit_dept_id">
+						<span id="message_span" style="color:red;padding:5px;"></span>
 					</form>
 				</div>
 				<div class="modal-footer">
@@ -413,7 +414,7 @@
 			function validateEditDoctor() {
 				var selectedVal = $('#department_select').find('option:selected').val();
 				$('#edit_dept_id').val(selectedVal);
-				return true;
+				return commonValidation($('#edit_doctor_form'));
 			}
 			
 			function validateAddDoctor() {
@@ -423,6 +424,21 @@
 					return false;
 				}
 				$('#add_dept_id').val(selectedVal);
+				return commonValidation($('#add_doctor_form'));
+			}
+			
+			function commonValidation(form) {
+				timeslot = form.find('#timeslot');
+				if(timeslot.val().length != 18) {
+					form.find('#message_span').text('Timeslot should be 18 characters long.');
+					return false;
+				}
+				for(let i = 0; i < 18; i++) {
+					if(timeslot.val()[i] != '0' && timeslot.val()[i] != '1') {
+						form.find('#message_span').text('Timeslot should only contain 0s and 1s.');
+						return false;
+					}
+				}
 				return true;
 			}
 			
