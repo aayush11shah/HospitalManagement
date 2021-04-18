@@ -115,6 +115,16 @@ def pay_charges():
     p_name = str(patient_data[2])
     return render_shop_cart(p_name, m_status)
 
+@app.route('/doctor_appointments2.html', methods=['POST'])
+def allot_room():
+    pid = request.form['pid']
+    doc_id = request.form['d_name']
+    doc_id = disp('select doc_id from doctor where CONCAT(first_name, " ", last_name)="' + doc_id+'"')[0][0]
+    timeslot = request.form['timeslot']
+    free_room = disp('select room_id from room where isAvailable="Y"')[0][0]
+    execute_query('update room set p_id = ' + str(pid) + ' isAvailable="NO" where room_id = ' + str(free_room))
+    execute_query('update appointment set start_date = NULL where p_id=' + str(pid) + " and doc_id = " + str(doc_id) + " and time = " + str(timeslot))
+    return render_doctor_appointment(request.form['d_name'])
        
 def new_transaction(p_id, item_id, qty_bought):
     transaction_number = disp('select max(transact_id) from transact')[0][0]

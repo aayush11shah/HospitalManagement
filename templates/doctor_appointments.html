@@ -240,6 +240,7 @@
                 </div>
             </div>
         </div>
+		</form>
     </div>
 
     <!-- Bootstrap core JavaScript-->
@@ -257,17 +258,29 @@
 		$(document).ready(function() {
 			appointments = JSON.parse('{{ appointments_json | tojson | safe}}');
             for(let i = 0; i<Object.keys(appointments).length; i++){
-                $("#table-body").append("<tr><td>"+appointments[i][0]+"</td><td>"+appointments[i][1]+"</td><td>"+appointments[i][2].slice(0,16)+"</td><td>"+appointments[i][3]+"</td><td><button class='edit_btn btn-sm btn-info btn-icon-split' data-toggle='modal' data-target='#detModal'><span class='icon'><i class='fas fa-edit'></i></span><span class='text'>View or Edit Patient Details</span></button></td>"
-                    +"<td><button class='edit_btn btn-sm btn-info btn-icon-split' data-toggle='modal' data-target='#editModal'><span class='icon'><i class='fas fa-edit'></i></span><span class='text'>Allot Room</span></button>"
+                $("#table-body").append("<tr><td>"+appointments[i][0]+"</td><td>"+appointments[i][1]+"</td><td>"+appointments[i][2].slice(0,16)+"</td><td>"+appointments[i][3]+"</td><td><button id='edit_history' class='edit_btn btn-sm btn-info btn-icon-split' data-toggle='modal' data-target='#detModal'><span class='icon'><i class='fas fa-edit'></i></span><span class='text'>View or Edit Patient Details</span></button></td>"
+                    +"<td><button class='allot_btn edit_btn btn-sm btn-info btn-icon-split' data-toggle='modal' data-target='#editModal'><span class='icon'><i class='fas fa-edit'></i></span><span class='text'>Allot Room</span></button>"
 					+"        <button class='delete_btn  btn-sm btn-danger btn-icon-split'><span class='icon'><i class='fas fa-trash'></i></span><span class='text'>Discharge</span></button></td></tr>");
                 
             }
 
-            $("#table-body").on('click', '.edit_btn', function() {
-					var currentRow=$(this).closest("tr");
-					$("#patdet").val(appointments[currentRow.index()][4]);
-                    $("#patid").val(appointments[currentRow.index()][5]);
-				});
+            $('#edit_history').on('click', function() {
+				var currentRow=$(this).closest("tr");
+				$("#patdet").val(appointments[currentRow.index()][4]);
+				$("#patid").val(appointments[currentRow.index()][5]);
+			});
+			
+			$('.allot_btn').on('click', function() {
+				var currentRow=$(this).closest("tr");
+				var url = "/doctor_appointments2.html";
+				var params = "pid="+appointments[currentRow.index()][5] + "&d_name={{d_name}}&timeslot=" + appointments[currentRow.index()][1];
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST", url, true);
+
+				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+				xhr.send(params);
+			});
 
 		});
 	</script>

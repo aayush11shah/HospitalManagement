@@ -99,7 +99,7 @@ CREATE TABLE appointment (
 	doc_id INT ,
 	start_date DATE,
 	time INT,
-	primary key (Doc_id, start_date, time)
+	primary key (Doc_id, p_id, time)
 );
 """
 
