@@ -34,7 +34,7 @@ def login_doctor():
         if(len(doctor)):
             login[request.remote_addr] = 'd' + str(doctor[0][0])
             return render_template("doctor_home.html", d_name= (doctor[0][2] + " " + doctor[0][3]),doctor_data= doctor[0][4:])
-        return "Wrong password or username"
+        return render_template("doctor_wrong_pass.html")
         
 @app.route('/admin_login', methods=['POST'])
 def login_admin():
@@ -45,7 +45,7 @@ def login_admin():
         if(len(admin)):
             login[request.remote_addr] = 'a'
             return render_template("admin_home.html")
-        return "Wrong password or username"
+        return render_template("admin_wrong_pass.html")
         
 @app.route('/patient_login', methods=['POST'])
 def login_patient():
@@ -55,7 +55,7 @@ def login_patient():
         if(len(patient)):
             login[request.remote_addr] = 'p' + str(patient[0][0])
             return render_template("patient_home.html", p_name=str(patient[0][2]),patient_data=patient[0][3:])
-        return "Wrong password or username"
+        return render_template("patient_wrong_pass.html")
 
 @app.route('/admin_manage_doctors.html', methods=['POST'])
 def manage_doctor():
@@ -105,6 +105,17 @@ def doctor_appointments_det():
     return render_doctor_appointment(d_name)
     
        
+@app.route('/patient_shop_cart.html', methods=['POST'])
+def pay_charges():
+    form = request.form
+    for key in form.keys():
+        execute_query('update transact set pay_status = 1 where transact_id = ' + key[1:])
+    m_status = login[request.remote_addr]
+    patient_data = disp("select * from patient where p_id = " + m_status[1:])[0]
+    p_name = str(patient_data[2])
+    return render_shop_cart(p_name, m_status)
+
+       
 def new_transaction(p_id, item_id, qty_bought):
     transaction_number = disp('select max(transact_id) from transact')[0][0]
     if transaction_number == None:
@@ -147,7 +158,7 @@ def page(page_type):
             elif(page_type == 'patient_shop.html'):
                 return render_patient_shop(p_name, "")
             elif(page_type == 'patient_shop_cart.html'):
-                return render_template(page_type, p_name=p_name) 
+                return render_shop_cart(p_name, m_status);
             elif(page_type == 'patient_transaction_history.html'):
                 return render_template(page_type, p_name=p_name)
             return render_template(page_type)
@@ -167,6 +178,9 @@ def page(page_type):
 
 def admin_manage_doctors():
     return render_template('admin_manage_doctors.html', doctor_table=disp("select doc_id, first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor"), departments=disp('select dept_id, dept_name from department')) 
+
+def render_shop_cart(p_name, m_status):
+    return render_template("patient_shop_cart.html", p_name=p_name, items=disp("select transact_id, item_name, (price*qty_bought) from transact, expense where transact.item_id = expense.item_id and pay_status=0 and p_id="+m_status[1:])) 
 
 def render_patient_book_appointment(p_name, message):
     appointments_json = {}
@@ -201,52 +215,33 @@ def render_doctor_appointment(d_name):
     
     return render_template("doctor_appointments.html", d_name=d_name, appointments_json=appointments_json)
 
-@app.route('/admin_report/download')
-def download_report():
-    return (get_pdf())
+@app.route('/admin_report/download/expenseReport')
+def download_exp_report():
+    pdf = FPDF()
+    pdf = make_page_expense(pdf)
+    return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=Expense_report.pdf'})    
+@app.route('/admin_report/download/patientReport')
+def download_pat_report():
+    pdf = FPDF()
+    pdf = make_page(pdf,"patient")
+    return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=Patient_report.pdf'})    
+
+@app.route('/admin_report/download/doctorReport')
+def download_doc_report():
+    pdf = FPDF()
+    pdf = make_page(pdf,"doctor")
+    return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=Doctor_report.pdf'})    
+
+
     
-    
-def get_pdf(report = "expense"):
-    try:
-        get_header = disp("desc " + report)
-        heads = []
-        for tup in get_header:
-            heads.append(tup[0])
-            
-        result = disp("select * from " + report)
-        pdf = FPDF()
-        pdf.add_page()
-
-        page_width = pdf.w - 2 * pdf.l_margin 
-
-        pdf.set_font('Times','B',24.0) 
-        pdf.cell(page_width, 0.0, 'Item Data', align='C')
-        pdf.ln(10)
-
-        col_width = page_width/4
-
-        pdf.ln(1)
-
-        th = pdf.font_size
+# def get_pdf():
+#     try:
+#         pdf = make_page(pdf,"doctor")
+#         pdf = make_page(pdf,"patient")
         
-        for head in heads:
-            pdf.set_font('Times', 'B', 14.0)
-            pdf.cell(col_width, 2*th, head, border=1)
-        pdf.ln(2*th) 
-        
-        pdf.set_font('Courier', '', 12)
-        for row in result:
-            for el in row:
-                pdf.cell(col_width, th, str(el), border=1)
-            pdf.ln(th)
-        
-        pdf.ln(10)
-
-        pdf.set_font('Times','',10.0) 
-        pdf.cell(page_width, 0.0, '- end of report -', align='C')
-        return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=Expense_report.pdf'})    
-    except Exception as e:
-        print(e)
+#         return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=Expense_report.pdf'})    
+#     except Exception as e:
+#         print(e)
 
 
 if __name__ == '__main__':
