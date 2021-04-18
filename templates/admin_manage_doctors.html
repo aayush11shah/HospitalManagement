@@ -419,7 +419,11 @@
 			function validateAddDoctor() {
 				var selectedVal = $('#dept_select').find('option:selected').val();
 				if(selectedVal == '-1') {
-					$('#message_span').text('Please choose a department.');
+					$('#add_doctor_form').find('#message_span').text('Please choose a department.');
+					return false;
+				}
+				if($('#add_doctor_form').find('#pass').val().length == 0) {
+					$('#add_doctor_form').find('#message_span').text('Password is required.');
 					return false;
 				}
 				$('#add_dept_id').val(selectedVal);
