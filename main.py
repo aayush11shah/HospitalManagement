@@ -93,6 +93,17 @@ def book_appointment():
     new_transaction(p_id, item_id, 1)
     execute_query('insert into appointment values(' + p_id +', ' + form['docid'] + ', ' + '"'+ form['date'] +'", ' + form['slot'] + ');')
     return render_patient_book_appointment(form['p_name'], 'Appointment booked.')
+
+@app.route('/doctor_appointments.html', methods=['POST'])
+def doctor_appointments_det():
+    form = request.form
+    doc_id = login[request.remote_addr][1:]
+    #print('update patient set p_history = "' + form['patdet'] + '" where p_id = '+form['patid'])
+    execute_query('update patient set p_history = "' + form['patdet'] + '" where p_id = '+form['patid'])
+    doctor_data = disp("select * from doctor where doc_id = " + doc_id)[0]
+    d_name = doctor_data[2] + " " + doctor_data[3]
+    return render_doctor_appointment(d_name)
+    
        
 def new_transaction(p_id, item_id, qty_bought):
     transaction_number = disp('select max(transact_id) from transact')[0][0]
@@ -179,13 +190,13 @@ def render_doctor_appointment(d_name):
     chamber = disp('select chamber from doctor where doc_id = ' + m_status[1:])[0][0]
     i = 0
     for appointment in current_appointments:
-        patient_data = disp('select p_name, p_history from patient where p_id = ' + str(appointment[0]))[0]
+        patient_data = disp('select p_name, p_history, p_id from patient where p_id = ' + str(appointment[0]))[0]
         location = ""
         if appointment[1] != "NULL":
             location = chamber
         else:
             location = disp('select room_id from room where p_id = ' + appointment[0])[0][0]
-        appointments_json[i] = [patient_data[0], int(appointment[2]), appointment[1], location, patient_data[1]]
+        appointments_json[i] = [patient_data[0], int(appointment[2]), appointment[1], location, patient_data[1],patient_data[2]]
         i += 1        
     
     return render_template("doctor_appointments.html", d_name=d_name, appointments_json=appointments_json)
