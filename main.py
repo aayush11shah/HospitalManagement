@@ -94,6 +94,17 @@ def book_appointment():
     execute_query('insert into appointment values(' + p_id +', ' + form['docid'] + ', ' + '"'+ form['date'] +'", ' + form['slot'] + ');')
     return render_patient_book_appointment(form['p_name'], 'Appointment booked.')
        
+@app.route('/patient_shop_cart.html', methods=['POST'])
+def pay_charges():
+    form = request.form
+    for key in form.keys():
+        execute_query('update transact set pay_status = 1 where transact_id = ' + key[1:])
+    m_status = login[request.remote_addr]
+    patient_data = disp("select * from patient where p_id = " + m_status[1:])[0]
+    p_name = str(patient_data[2])
+    return render_shop_cart(p_name, m_status)
+
+       
 def new_transaction(p_id, item_id, qty_bought):
     transaction_number = disp('select max(transact_id) from transact')[0][0]
     if transaction_number == None:
@@ -136,7 +147,7 @@ def page(page_type):
             elif(page_type == 'patient_shop.html'):
                 return render_patient_shop(p_name, "")
             elif(page_type == 'patient_shop_cart.html'):
-                return render_template(page_type, p_name=p_name) 
+                return render_shop_cart(p_name, m_status);
             elif(page_type == 'patient_transaction_history.html'):
                 return render_template(page_type, p_name=p_name)
             return render_template(page_type)
@@ -156,6 +167,9 @@ def page(page_type):
 
 def admin_manage_doctors():
     return render_template('admin_manage_doctors.html', doctor_table=disp("select doc_id, first_name, last_name, aadhar_id, chamber, salary, dept_id, timeslot from doctor"), departments=disp('select dept_id, dept_name from department')) 
+
+def render_shop_cart(p_name, m_status):
+    return render_template("patient_shop_cart.html", p_name=p_name, items=disp("select transact_id, item_name, (price*qty_bought) from transact, expense where transact.item_id = expense.item_id and pay_status=0 and p_id="+m_status[1:])) 
 
 def render_patient_book_appointment(p_name, message):
     appointments_json = {}

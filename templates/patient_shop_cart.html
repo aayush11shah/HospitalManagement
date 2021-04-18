@@ -170,36 +170,17 @@
                             <h6 class="m-0 font-weight-bold text-primary">Choose Item to Checkout</h6>
                         </div>
                         <div class="card-body">
-                            <form> 
+                            <form id="pay_form" method="post" action="/patient_shop_cart.html" onsubmit="chain_tids()"> 
                                 <div class="row">
-                                    <div class="col">
+                                    <div id="item_list" class="col">
+										{% for item in items %}
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input big-checkbox" type="checkbox" id="item1">
+                                            <input class="form-check-input big-checkbox" type="checkbox" id="{{item[0]}}">
                                             <label class="form-check-label text-lg ml-2" for="item1">
-                                              Item 1 | Amount: Rs. 100
+                                              {{item[1]}} | Amount: Rs. {{item[2]}}
                                             </label>
                                         </div>
-
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input big-checkbox" type="checkbox" id="item2">
-                                            <label class="form-check-label text-lg ml-2" for="item2">
-                                              Item 2 | Amount: Rs. 200
-                                            </label>
-                                        </div>
-
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input big-checkbox" type="checkbox" id="item3">
-                                            <label class="form-check-label text-lg ml-2" for="item3">
-                                              Item 3 | Amount: Rs. 50 
-                                            </label>
-                                        </div>
-
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input big-checkbox" type="checkbox" id="item4">
-                                            <label class="form-check-label text-lg ml-2" for="item4">
-                                              Item 4 | Amount: Rs. 150
-                                            </label>
-                                        </div>
+										{% endfor %}
                                     </div>                                 
                                 </div>
                              
@@ -207,17 +188,17 @@
 
                                 <div class="row mb-2">
                                     <div class="col">
-                                        <h6 class="m-0 font-weight-bold text-primary">Total Amount: Rs. 500</h6>
+                                        <h6 class="m-0 font-weight-bold text-primary">Total Amount: Rs. 0</h6>
                                     </div> 
                                 </div>
                                 <div class="row"> 
                                     <div class="col">
-                                        <a href="#" class="btn btn-primary btn-icon-split">
-                                            <span class="icon text-white-50">
-                                                <i class="fas fa-rupee-sign"></i>
-                                            </span>
-                                            <span class="text">Pay</span>
-                                        </a>
+										<button type="submit" id="pay_btn" class="btn btn-primary btn-icon-split">
+											<span class="icon text-white-50">
+												<i class="fas fa-rupee-sign"></i>
+											</span>
+											<span class="text">Pay</span>
+										</button>
                                     </div>
                                 </div>                               
                             </form> 
@@ -333,6 +314,34 @@
 
     <!-- Custom scripts for all pages-->
     <script src="../static/js/sb-admin-2.min.js"></script>
+	
+	<script>
+		var total_amount = 0;
+		function chain_tids() {
+			var buttons = $('#pay_form').find('.big-checkbox');
+			for(let i = 0; i < buttons.length; i++) {
+				if($(buttons[i]).is(":checked")) {
+					$('#pay_form').append("<input name='t" + $(buttons[i]).attr("id") + "'id='t" + $(buttons[i]).attr("id") +"'>");
+				}
+			}
+			return true;
+		}
+		
+		$(document).ready(function() {
+			$('.big-checkbox').on('click', function() {
+				var str = $(this).parent().find('label').text().trim();
+				str = str.substr(str.lastIndexOf(' ')+1, str.length);
+				if ($(this).is(":checked"))
+				{
+					total_amount += parseInt(str);
+				}
+				else {
+					total_amount -= parseInt(str);
+				}
+				$('h6').text('Total Amount: Rs. ' + total_amount);
+			});
+		});
+	</script>
 
 </body>
 
