@@ -188,52 +188,33 @@ def render_doctor_appointment(d_name):
     
     return render_template("doctor_appointments.html", d_name=d_name, appointments_json=appointments_json)
 
-@app.route('/admin_report/download')
-def download_report():
-    return (get_pdf())
+@app.route('/admin_report/download/expenseReport')
+def download_exp_report():
+    pdf = FPDF()
+    pdf = make_page(pdf,"expense")
+    return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=Expense_report.pdf'})    
+@app.route('/admin_report/download/patientReport')
+def download_pat_report():
+    pdf = FPDF()
+    pdf = make_page(pdf,"patient")
+    return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=Patient_report.pdf'})    
+
+@app.route('/admin_report/download/doctorReport')
+def download_doc_report():
+    pdf = FPDF()
+    pdf = make_page(pdf,"doctor")
+    return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=Doctor_report.pdf'})    
+
+
     
-    
-def get_pdf(report = "expense"):
-    try:
-        get_header = disp("desc " + report)
-        heads = []
-        for tup in get_header:
-            heads.append(tup[0])
-            
-        result = disp("select * from " + report)
-        pdf = FPDF()
-        pdf.add_page()
-
-        page_width = pdf.w - 2 * pdf.l_margin 
-
-        pdf.set_font('Times','B',24.0) 
-        pdf.cell(page_width, 0.0, 'Item Data', align='C')
-        pdf.ln(10)
-
-        col_width = page_width/4
-
-        pdf.ln(1)
-
-        th = pdf.font_size
+# def get_pdf():
+#     try:
+#         pdf = make_page(pdf,"doctor")
+#         pdf = make_page(pdf,"patient")
         
-        for head in heads:
-            pdf.set_font('Times', 'B', 14.0)
-            pdf.cell(col_width, 2*th, head, border=1)
-        pdf.ln(2*th) 
-        
-        pdf.set_font('Courier', '', 12)
-        for row in result:
-            for el in row:
-                pdf.cell(col_width, th, str(el), border=1)
-            pdf.ln(th)
-        
-        pdf.ln(10)
-
-        pdf.set_font('Times','',10.0) 
-        pdf.cell(page_width, 0.0, '- end of report -', align='C')
-        return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=Expense_report.pdf'})    
-    except Exception as e:
-        print(e)
+#         return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=Expense_report.pdf'})    
+#     except Exception as e:
+#         print(e)
 
 
 if __name__ == '__main__':

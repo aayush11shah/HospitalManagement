@@ -15,5 +15,35 @@ def insert_dept(dept_name, available_docs, total_docs, hod_doc_id = 0):
     return(query1+query2)
 
 
+def loadbasicdata():
+    dept = []
+    dept.append(insert_dept("Pediatrics",5,5,1))
+    dept.append(insert_dept("Gynecology",2,2,6))
+    dept.append(insert_dept("Physicians",3,3,8))
+    dept.append(insert_dept("Dermatology",1,1,11))
+    dept.append(insert_dept("ENT",1,2,12))
+    dept.append(insert_dept("Neurology",1,1,14))
+    
+    doc = []
+    doc.append(insert_doctor("pass","Obediah","Stane",801578520,'A1',90000,1,'111111101110010011'))
+    doc.append(insert_doctor("pass","Tom","Wayne",703232406,'A2',90000,1,'010010110100000110'))
+    doc.append(insert_doctor("pass","Robert","Stark",365391356,'A3',90000,1,'010101100101100101'))
+    doc.append(insert_doctor("pass","Ansel","Meddik",582629954,'A4',90000,1,'001001010101001001'))
+    doc.append(insert_doctor("pass","Albert","Stone",313126212,'A5',90000,1,'100010001111010110'))
+
+    doc.append(insert_doctor("pass","Joseph","Wilhem",343920949,'B1',100000,1,'100101101011001100'))
+    doc.append(insert_doctor("pass","Callam","Curle",463017246,'B2',100000,1,'100110000100101010'))
+    doc.append(insert_doctor("pass","John","Berty",626267533,'C1',80000,1,'100000100110110001'))
+    doc.append(insert_doctor("pass","Harry","Potter",321742660,'C1',80000,1,'000011111001001000'))
+    doc.append(insert_doctor("pass","Celine","Angless",314790474,'C1',80000,1,'110111010000011001'))
+    
+    doc.append(insert_doctor("pass","Katleen","Everglades",677879146,'D1',70000,1,'111011101100101111'))
+    doc.append(insert_doctor("pass","Arthur","Curry",817963674,'E1',70000,1,'000110100100111011'))
+    doc.append(insert_doctor("pass","Dasya","Fisher",697301369,'E2',120000,1,'110001001011000111'))
+    doc.append(insert_doctor("pass","Jennifer","Ezzel",546322847,'F1',120000,1,'011000100101010000'))
+    doc.append(insert_doctor("pass","Lois","Lane",554275045,'F2',120000,1,'001111000111010010')) 
+    #insert_patient("pass",name,'A+',12,'F',94856034390,"",aadhar_id,p_history):
+    #doc.append(insert_doctor("pass","Lois","Lane",554275000425,'F2',1,'001111000111010010')
+    return dept,doc
     
 
