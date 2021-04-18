@@ -1,5 +1,6 @@
 from my_package import *
 from fpdf import FPDF
+import random
 
 username = 'admin'
 password = 'password'    
@@ -32,12 +33,15 @@ def init():
         Connector.execute_query(conn,"use hospital")
         maketables(conn)
         relate(conn)
-        dept,doc = loadbasicdata()
+        dept,doc,item = loadbasicdata()
+        random.shuffle(dept)
+        random.shuffle(doc)
         for elem in dept:
             execute_query(elem)
         for elem in doc:
             execute_query(elem)
-            
+        for elem in item:
+            execute_query(elem)
         print("Hospital database created")
     else: 
         print("Connection to hospital established")
