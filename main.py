@@ -34,7 +34,7 @@ def login_doctor():
         if(len(doctor)):
             login[request.remote_addr] = 'd' + str(doctor[0][0])
             return render_template("doctor_home.html", d_name= (doctor[0][2] + " " + doctor[0][3]),doctor_data= doctor[0][4:])
-        return "Wrong password or username"
+        return render_template("doctor_wrong_pass.html")
         
 @app.route('/admin_login', methods=['POST'])
 def login_admin():
@@ -45,7 +45,7 @@ def login_admin():
         if(len(admin)):
             login[request.remote_addr] = 'a'
             return render_template("admin_home.html")
-        return "Wrong password or username"
+        return render_template("admin_wrong_pass.html")
         
 @app.route('/patient_login', methods=['POST'])
 def login_patient():
@@ -55,7 +55,7 @@ def login_patient():
         if(len(patient)):
             login[request.remote_addr] = 'p' + str(patient[0][0])
             return render_template("patient_home.html", p_name=str(patient[0][2]),patient_data=patient[0][3:])
-        return "Wrong password or username"
+        return render_template("patient_wrong_pass.html")
 
 @app.route('/admin_manage_doctors.html', methods=['POST'])
 def manage_doctor():
@@ -207,7 +207,7 @@ def render_doctor_appointment(d_name):
 @app.route('/admin_report/download/expenseReport')
 def download_exp_report():
     pdf = FPDF()
-    pdf = make_page(pdf,"expense")
+    pdf = make_page_expense(pdf)
     return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=Expense_report.pdf'})    
 @app.route('/admin_report/download/patientReport')
 def download_pat_report():

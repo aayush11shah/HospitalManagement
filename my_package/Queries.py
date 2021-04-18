@@ -34,7 +34,7 @@ def loadbasicdata():
     doc.append(insert_doctor("pass","Joseph","Wilhem",343920949,'B1',100000,2,'100101101011001100'))
     doc.append(insert_doctor("pass","Callam","Curle",463017246,'B2',100000,2,'100110000100101010'))
     doc.append(insert_doctor("pass","John","Berty",626267533,'C1',80000,3,'100000100110110001'))
-    doc.append(insert_doctor("pass","Harry","Potter",321742660,'C1',80000,3,'000011111001001000'))
+    doc.append(insert_doctor("pass","Harry","Roger",321742660,'C1',80000,3,'000011111001001000'))
     doc.append(insert_doctor("pass","Celine","Angless",314790474,'C1',80000,3,'110111010000011001'))
     
     doc.append(insert_doctor("pass","Katleen","Everglades",677879146,'D1',70000,4,'111011101100101111'))
@@ -53,7 +53,7 @@ def loadbasicdata():
     item.append("insert into expense values (7, 'Crutches', 10, 2000)")
     item.append("insert into expense values (6, 'Mask', 1000, 80)")
     item.append("insert into expense values (8, 'Paracetamol', 800, 300)") 
-    item.append("insert into expense values (9, 'Eucalyptus Oil', 100, 2000)") 
+    item.append("insert into expense values (9, 'Band aid', 100, 2000)") 
     item.append("insert into expense values (10, 'Vitamin Tablets', 25, 200)") 
      
     
