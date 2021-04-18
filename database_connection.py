@@ -86,18 +86,70 @@ def make_page(pdf,report = "expense"):
             pdf.cell(col_width, 2*th, heads[-1], border=1)            
         
         pdf.ln(2*th) 
-        
+
         pdf.set_font('Courier', '', 9)
         for row in result:
             pdf.cell(col_width, th, str(row[0]), border=1)
             if(report == 'expense'):
-                pdf.cell(col_width, th, str(row[1]), border=1)    
+                pdf.cell(col_width, th, str(row[1]), border=1)  
+            print("making page",row)
             for el in row[2:-1]:
                 pdf.cell(col_width, th, str(el), border=1)
             if(report == 'doctor'):
                 pdf.cell(col_width*2, th, row[-1], border=1)
             else:
                 pdf.cell(col_width, th, row[-1], border=1)
+            print("making page 2",row)
+            pdf.ln(th)
+        
+        print("Outside")
+        pdf.ln(10)
+
+        pdf.set_font('Times','',10.0) 
+        pdf.cell(page_width, 0.0, '- end of ' + report + ' report -', align='C')
+        return pdf #Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=Expense_report.pdf'})    
+    except Exception as e:
+        print(e)
+def make_page_expense(pdf):
+    try:
+        report = "Expense"
+        get_header = disp("desc " + report)
+        heads = []
+        fields = 0
+        for tup in get_header:
+            if (tup[0] != 'Password' ):
+                heads.append(tup[0])
+            fields += 1
+        result = disp("select * from " + report)
+        # pdf = FPDF()
+        pdf.add_page()
+
+        page_width = pdf.w - 2 * pdf.l_margin 
+
+        pdf.set_font('Times','B',24.0) 
+        pdf.cell(page_width, 0.0, report.upper()+' Report', align='C')
+        pdf.ln(10)
+
+        col_width = page_width/(fields)
+
+        pdf.ln(1)
+
+        th = pdf.font_size
+        
+        pdf.set_font('Times', 'B', 11.0)
+        for head in heads[:-1]:
+            pdf.cell(col_width, 2*th, head, border=1)
+        if(report == 'doctor'):
+            pdf.cell(col_width*2, 2*th, heads[-1], border=1)
+        else:
+            pdf.cell(col_width, 2*th, heads[-1], border=1)            
+        
+        pdf.ln(2*th) 
+
+        pdf.set_font('Courier', '', 9)
+        for row in result:
+            for el in row:
+                pdf.cell(col_width, th, str(el), border=1)
             pdf.ln(th)
         
         pdf.ln(10)

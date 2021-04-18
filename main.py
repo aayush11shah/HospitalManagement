@@ -193,7 +193,7 @@ def render_doctor_appointment(d_name):
 @app.route('/admin_report/download/expenseReport')
 def download_exp_report():
     pdf = FPDF()
-    pdf = make_page(pdf,"expense")
+    pdf = make_page_expense(pdf)
     return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf', headers={'Content-Disposition':'attachment;filename=Expense_report.pdf'})    
 @app.route('/admin_report/download/patientReport')
 def download_pat_report():
