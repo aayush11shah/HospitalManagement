@@ -145,6 +145,8 @@ def page(page_type):
         userid = disp("select MAX(P_ID) from patient")[0][0]
         if userid is None:
             userid = 1000
+        else:
+            userid += 1
         return render_template(page_type, value=userid)
     if(request.remote_addr in login.keys()):
         if(login[request.remote_addr] == 'a'):
