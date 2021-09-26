@@ -6,6 +6,7 @@ async-generator==1.10
 attrs==20.3.0
 avro-python3==1.9.2.1
 backcall==0.2.0
+backports.entry-points-selectable==1.1.0
 beautifulsoup4==4.9.3
 bleach==3.2.1
 bs4==0.0.1
@@ -21,12 +22,14 @@ cycler==0.10.0
 decorator==4.4.2
 defusedxml==0.6.0
 dill==0.3.1.1
+distlib==0.3.3
 docopt==0.6.2
 entrypoints==0.3
 et-xmlfile==1.0.1
 experta==1.9.4
 fastavro==1.4.1
 fasteners==0.16.1
+filelock==3.0.12
 Flask==1.1.2
 flatbuffers==1.12
 fpdf==1.7.2
@@ -56,6 +59,7 @@ googleapis-common-protos==1.53.0
 grpc-google-iam-v1==0.12.3
 grpcio==1.34.1
 grpcio-gcp==0.2.2
+gunicorn==20.1.0
 h5py==3.1.0
 haversine==2.3.0
 hdfs==2.6.0
@@ -107,6 +111,8 @@ parso==0.8.1
 patsy==0.5.1
 pickleshare==0.7.5
 Pillow==8.1.0
+pipenv==2021.5.29
+platformdirs==2.4.0
 prometheus-client==0.9.0
 prompt-toolkit==3.0.9
 protobuf==3.15.8
@@ -166,6 +172,8 @@ traitlets==5.0.5
 typeguard==2.12.1
 typing-extensions==3.7.4.3
 urllib3==1.26.3
+virtualenv==20.8.1
+virtualenv-clone==0.5.7
 wcwidth==0.2.5
 webencodings==0.5.1
 Werkzeug==1.0.1
