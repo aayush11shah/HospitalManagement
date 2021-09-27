@@ -256,6 +256,6 @@ def download_doc_report():
 #         print(e)
 
 
-if __name__ == '__main__':
+def mainFnc():
     init()
     app.run(debug=True)
